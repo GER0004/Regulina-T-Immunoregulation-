@@ -479,18 +479,20 @@ export default function RegulinaTSite() {
               </div>
             </motion.div>
           </div>
-
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
-            <Card className="relative aspect-video w-full overflow-hidden p-0">
-              <div className="absolute inset-0"><MoleculeVisual /></div>
-              <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-emerald-500/30" />
-              <button onClick={() => alert("Embed your 1-minute video here (replace <video> source).")} className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-600 p-3 text-white" aria-label="Play">
-                <Play />
-              </button>
-              <video className="h-full w-full object-cover opacity-70">
-                <source src="/video/regulina_t_overview.mp4" type="video/mp4" />
-              </video>
-            </Card>
+<motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
+  <Card className="relative aspect-video w-full overflow-hidden p-0">
+    <div className="absolute inset-0">
+      <iframe
+        className="w-full h-full"
+        src="https://www.youtube.com/embed/SDnNofWX1YY"
+        title="Regulina-T Overview"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      ></iframe>
+    </div>
+  </Card>
+</motion.div>
           </motion.div>
         </div>
       </section>
