@@ -650,3 +650,32 @@ function Input({ label, type = "text" }: { label: string; type?: string }) {
     </label>
   );
 }
+function Feature({
+  icon,
+  title,
+  desc
+}: {
+  icon: React.ReactNode;
+  title: string;
+  desc: string;
+}) {
+  return (
+    <div
+      className="rounded-xl border p-4 shadow-sm"
+      style={{
+        borderColor: brand.cardBorder,
+        background: "#FFFFFF",
+        backgroundImage:
+          "linear-gradient(180deg, rgba(2,132,199,0.02), rgba(2,132,199,0))",
+        boxShadow:
+          "0 2px 6px rgba(2,6,23,0.04), 0 12px 24px rgba(2,6,23,0.06)"
+      }}
+    >
+      <div className="mb-1 flex items-center gap-2 text-slate-900">
+        <span className="text-emerald-600">{icon}</span>
+        <span className="font-semibold">{title}</span>
+      </div>
+      <div className="text-sm text-slate-600">{desc}</div>
+    </div>
+  );
+}
