@@ -477,19 +477,18 @@ export default function RegulinaTSite() {
                   <Users2 size={16} /> {d.blocks.ctas.licensee}
                 </a>
               </div>
-            </motion.div>
-          </div>
-<div>
-  <div className="w-full aspect-video rounded-2xl overflow-hidden shadow-sm border border-slate-200 bg-white">
-    <iframe
-      className="w-full h-full"
-      src="https://www.youtube.com/embed/SDnNofWX1YY?rel=0"
-      title="Regulina-T Overview"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowFullScreen
-    ></iframe>
-  </div>
-</div>      {/* Mission */}
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
+ <div className="w-full aspect-video rounded-2xl overflow-hidden shadow-sm border border-slate-200 bg-white">
+  <iframe
+    className="w-full h-full"
+    src="https://www.youtube.com/embed/SDnNofWX1YY?rel=0"
+    title="Regulina-T Overview"
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+  />
+</div>
+</motion.div>
       <section className="border-y border-slate-200">
         <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-4 px-4 py-10 md:grid-cols-2 md:gap-6">
           <Card className="p-6 md:p-8">
