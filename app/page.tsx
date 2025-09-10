@@ -531,36 +531,33 @@ export default function Page() {
     >
      {/* Header with brand name and compact sub-badge under it */}
 <header className="sticky top-0 z-40 w-full bg-[#F9FAFB] border-b border-slate-200">
-  <div className="mx-auto max-w-[1200px] w-full px-4 py-2 flex items-center justify-between gap-4">
-    {/* ЛЕВО: лого + (бренд + компактный бейдж под ним) */}
+  <div className="mx-auto max-w-[1200px] w-full px-4 py-2 flex items-center justify-between gap-4 md:gap-6">
+    {/* ЛЕВО: лого + (бренд + маленький бейдж под ним) */}
     <div className={`flex items-start gap-3 min-w-0 ${isRTL ? "flex-row-reverse" : ""}`}>
-      {/* Вариант A: файл лого */}
+      {/* Логотип: 26–28px, без рамок/теней */}
+      {/* Если у вас есть файл логотипа, используйте <img>; иначе оставьте <BrandLogo /> */}
       {/* <img src="/assets/RegulinaT_logo_roundel.svg" alt="Regulina-T" className="h-[26px] md:h-[28px] w-auto mt-[2px] select-none" /> */}
-
-      {/* Вариант B: inline-логотип (если используете BrandLogo из файла) */}
       <BrandLogo className="h-[26px] md:h-[28px] w-auto mt-[2px]" />
 
-      <div className={`flex flex-col leading-none min-w-0 ${isRTL ? "items-end" : "items-start"}`}>
-        <span className="text-[20px] md:text-[24px] font-extrabold text-[#0B1220] truncate">
+      {/* Бренд + бейдж */}
+      <div className={`flex flex-col leading-none ${isRTL ? "items-end" : "items-start"}`}>
+        {/* Название — как сейчас, крупнее бейджа */}
+        <span className="text-[20px] md:text-[24px] font-extrabold text-[#0B1220]">
           Regulina-T™
         </span>
 
-        {/* Бейдж: ~в 2 раза меньше, одна строка, с многоточием при нехватке места */}
+        {/* Бейдж: 12–13px, высота ~16–18px, padding 2px 8px, ВСЕГДА в одну строку, без многоточий */}
         <span
-          className="mt-1 inline-flex items-center h-[20px] px-2 rounded-full
-                     bg-[#E6FDF5] border border-[#BBF7D0]
-                     text-[12px] font-semibold text-[#047857]
-                     whitespace-nowrap overflow-hidden truncate
-                     max-w-[140px] md:max-w-[180px]"
-          title="RGN-T1™ IMMUNOREGULATOR"
+          className="mt-1 inline-flex items-center rounded-full border px-2 py-0.5 text-[12px] md:text-[13px] font-semibold text-[#047857] whitespace-nowrap"
+          style={{ background: "#E6FDF5", borderColor: "#BBF7D0", height: "18px" }}
         >
           RGN-T1™ IMMUNOREGULATOR
         </span>
       </div>
     </div>
 
-    {/* ПРАВО: языковой свитчер — не должен сдвигать бейдж */}
-    <div className="flex items-center gap-4 shrink-0">
+    {/* ПРАВО: языковой свитчер (EN/RU/AR), справа на одном уровне, со стабильным отступом */}
+    <div className="flex items-center gap-2 shrink-0">
       {(["EN","RU","AR"] as const).map((l) => {
         const active = lang === l;
         return (
