@@ -400,11 +400,11 @@ function scrollToId(id: string) {
 /* =========================================================
    UI primitives
 ========================================================= */
-function BrandLogo() {
+function BrandLogo({ className = "h-6 w-6 md:h-7 md:w-7" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 100 100"
-      className="h-9 w-9 rounded-md shadow-lg ring-1 ring-emerald-400/30"
+      className={className}
       aria-label="Regulina-T Logo"
     >
       <defs>
