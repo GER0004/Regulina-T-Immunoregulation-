@@ -15,17 +15,17 @@ import {
 import { motion } from "framer-motion";
 
 /* =========================================================
-   Setup
+   Brand palette
 ========================================================= */
 const brand = {
   blue: "#0B1E3B",
   emerald: "#0CA678",
   sky: "#0EA5E9",
   ink: "#0B1220",
-  headerBg: "#F9FAFB",
-  pillBg: "#D1FAE5",
+  headerBg: "#F8FAFC",     // bg-slate-50
+  pillBg: "#BBF7D0",       // emerald-100
+  pillText: "#047857",     // emerald-700
   pillBorder: "#BBF7D0",
-  pillText: "#047857",
   cardBorder: "#D1FAE5",
   cardBg: "#ECFDF5",
   cardShadow: "0 2px 6px rgba(0,0,0,0.05)",
@@ -266,7 +266,7 @@ function buildContactMailto(lang: Lang) {
   }[lang];
   const body = {
     EN: "Dear Regulina-T team,%0D%0A%0D%0AMy name is (Full Name), and I am reaching out to explore potential collaboration with your company.%0D%0A%0D%0ACompany/Organization: ___%0D%0ACountry: ___%0D%0APhone: ___%0D%0AEmail: ___%0D%0A%0D%0APlease contact me to discuss the details.%0D%0A%0D%0ABest regards,%0D%0A_______",
-    RU: "Уважаемая команда Regulina-T,%0D%0A%0D%0AМеня зовут (ФИО), я обращаюсь по вопросу сотрудничества с вашей компанией.%0D%0A%0D%0AКомпания/Организация: ___%0D%0AСтрана: ___%0D%0АТелефон: ___%0D%0AЭлектронная почта: ___%0D%0A%0D%0AПрошу связаться со мной для обсуждения деталей.%0D%0A%0D%0AС уважением,%0D%0A_______",
+    RU: "Уважаемая команда Regulina-T,%0D%0A%0D%0AМеня зовут (ФИО), я обращаюсь по вопросу сотрудничества с вашей компанией.%0D%0A%0D%0AКомпания/Организация: ___%0D%0AСтрана: ___%0D%0АТелефон: ___%0D%0AЭлектронная почта: ___%0D%0A%0D%0АПрошу связаться со мной для обсуждения деталей.%0D%0A%0D%0AС уважением,%0D%0A_______",
     AR: "فريق ريغولينا-تي المحترم،%0D%0A%0D%0Aاسمي (الاسم الكامل)، وأتواصل معكم لاستكشاف إمكانية التعاون مع شركتكم.%0D%0A%0D%0Aالشركة/المنظمة: ___%0D%0Aالدولة: ___%0D%0Aالهاتف: ___%0D%0Aالبريد الإلكتروني: ___%0D%0A%0D%0Aيرجى التواصل معي لمناقشة التفاصيل.%0D%0A%0D%0Aمع خالص التحية،%0D%0A_______",
   }[lang];
   return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
@@ -326,7 +326,7 @@ function scrollToId(id: string) {
 }
 
 /* =========================================================
-   UI primitives (объявлены ДО Page)
+   UI primitives (declared BEFORE Page)
 ========================================================= */
 function BrandLogo() {
   return (
@@ -397,7 +397,6 @@ function Input({
   );
 }
 
-/* ---- ВАЖНО: сам компонент Feature объявлен ДО Page ---- */
 function Feature({
   icon,
   title,
@@ -458,38 +457,28 @@ export default function Page() {
       className="min-h-screen bg-white text-slate-900 selection:bg-emerald-200/60"
       style={{ fontFamily: "var(--font-sans)" }}
     >
-      {/* Header */}
-      <header
-        className="sticky top-0 z-40 w-full border-b"
-        style={{
-          background: brand.headerBg,
-          borderColor: "#E5E7EB",
-          boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
-        }}
-      >
-        <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between px-4 py-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <BrandLogo />
-            <div className="text-sm font-semibold tracking-wide text-slate-900">
-              Regulina-T™
+      {/* Header (compact badge, bg-slate-50) */}
+      <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-slate-50">
+        <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between px-4 py-3">
+          {/* left: logo + badge (adaptive + RTL) */}
+          <div
+            className={`flex flex-col sm:flex-row sm:items-center sm:gap-3 ${
+              isRTL ? "sm:flex-row-reverse" : ""
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <BrandLogo />
+              <span className="text-sm font-semibold tracking-wide text-slate-900">
+                Regulina-T™
+              </span>
             </div>
-            <span
-              className="inline-flex items-center rounded-full font-semibold"
-              style={{
-                background: brand.pillBg,
-                color: brand.pillText,
-                border: `1px solid ${brand.pillBorder}`,
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,.6)",
-                padding: "1px 10px",
-                fontSize: "11px",
-                lineHeight: 1.2,
-              }}
-            >
-              <Globe2 size={12} />
-              <span className="ml-1">{HEADER_BADGE}</span>
+
+            <span className="mt-2 inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-sm font-semibold text-emerald-700 shadow-sm sm:mt-0">
+              {HEADER_BADGE}
             </span>
           </div>
 
+          {/* nav (optional) */}
           <nav className="hidden items-center gap-1 md:flex">
             <MenuLink label={d.menu[0]} target="home" />
             <MenuLink label={d.menu[1]} target="science" />
@@ -498,6 +487,7 @@ export default function Page() {
             <MenuLink label={d.menu[4]} target="contacts" />
           </nav>
 
+          {/* lang switch */}
           <div className="flex items-center gap-2">
             {(["EN", "RU", "AR"] as const).map((l) => (
               <button
@@ -506,7 +496,7 @@ export default function Page() {
                 className={`rounded-md px-2 py-1 text-xs font-semibold tracking-wide ring-1 transition ${
                   lang === l
                     ? "bg-emerald-600 text-white ring-emerald-600"
-                    : "text-slate-700 ring-slate-200 hover:bg-slate-50"
+                    : "text-slate-700 ring-slate-200 hover:bg-slate-100"
                 }`}
                 aria-pressed={lang === l}
               >
@@ -520,7 +510,7 @@ export default function Page() {
       {/* Hero */}
       <section id="home" className="relative overflow-hidden">
         <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 items-center gap-10 px-4 py-12 md:grid-cols-2 md:py-20">
-          {/* Left */}
+          {/* left column */}
           <div>
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -571,9 +561,11 @@ export default function Page() {
               >
                 Regulina-T™ — {d.hero.paragraph}
               </p>
+
+              {/* CTA hero: Contact | Licensee */}
               <div
                 className={`mt-5 flex ${
-                  d.dir === "rtl" ? "flex-row-reverse" : ""
+                  isRTL ? "flex-row-reverse" : ""
                 } gap-4 sm:flex-row sm:items-center max-sm:flex-col max-sm:items-stretch`}
               >
                 <a
@@ -599,7 +591,7 @@ export default function Page() {
             </motion.div>
           </div>
 
-          {/* Right — YouTube */}
+          {/* right column — YouTube video */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -789,7 +781,6 @@ export default function Page() {
                 </ul>
               </div>
 
-              {/* вот тут использовался <Feature /> — теперь он точно объявлен */}
               <div className="grid grid-cols-2 gap-4 md:gap-6">
                 <Feature
                   icon={<Shield />}
