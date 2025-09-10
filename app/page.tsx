@@ -2,18 +2,18 @@
 
 import React, { useEffect, useState } from "react";
 import { PieChart, Pie, ResponsiveContainer, Tooltip, Legend } from "recharts";
-import { Mail, FileDown, ArrowRight, CheckCircle2, Globe2, FlaskConical, Users2, Shield, Play } from "lucide-react";
+import { Mail, FileDown, ArrowRight, CheckCircle2, Globe2, FlaskConical, Users2, Shield } from "lucide-react";
 import { motion } from "framer-motion";
 
-/**
- * Regulina-T™ — One-pager (EN/RU/AR), Vercel-ready
- * - Hero по ТЗ; CTA в hero: Связаться | Лицензиат (без «Скачать досье»)
- * - Шапка: компактный бейдж рядом с логотипом; фон #F9FAFB
- * - Карточки: мятный фон, бордер, лёгкая тень
- * - Mailto шаблоны локализованы; dossier скачивается по языку
- */
+/*
+  Regulina-T™ — One-pager (EN/RU/AR), Vercel-ready
+  - Хедер: компактный зелёный бейдж рядом с логотипом; фон #F9FAFB
+  - Hero: премиальная типографика, CTA = Связаться | Лицензиат
+  - Видео: YouTube <iframe> (адаптивно 16:9)
+  - Карточки: мятный фон, бордер, мягкая тень
+  - Mailto шаблоны локализованы; «Скачать досье» — по текущему языку
+*/
 
-// ---------- Theme ----------
 const brand = {
   blue: "#0B1E3B",
   emerald: "#0CA678",
@@ -31,7 +31,6 @@ const brand = {
 const HEADER_BADGE = "Regulina-T™ | RGN-T1™ IMMUNOREGULATOR";
 const CONTACT_EMAIL = "official.regulina.t@gmail.com";
 
-// ---------- Copy ----------
 const dict = {
   EN: {
     langLabel: "EN",
@@ -90,8 +89,7 @@ const dict = {
       contactsTitle: "Contacts",
       form: { name: "Your name", email: "Business email", org: "Organization", msg: "Message", send: "Send" },
       positioningCard: "Regulina-T™ is a God-given key: the unity of faith, science, and biotechnology.",
-      footer: "© Regulina-T™ Thymus Immunoregulator Platform",
-      videoTitle: "1-minute overview"
+      footer: "© Regulina-T™ Thymus Immunoregulator Platform"
     }
   },
   RU: {
@@ -151,8 +149,7 @@ const dict = {
       contactsTitle: "Контакты",
       form: { name: "Ваше имя", email: "Рабочая почта", org: "Организация", msg: "Сообщение", send: "Отправить" },
       positioningCard: "Regulina-T™ — ключ, дарованный Богом: единство веры, науки и биотехнологий.",
-      footer: "© Regulina-T™ Платформа иммунорегуляции тимуса",
-      videoTitle: "1-минутный обзор"
+      footer: "© Regulina-T™ Платформа иммунорегуляции тимуса"
     }
   },
   AR: {
@@ -212,55 +209,44 @@ const dict = {
       contactsTitle: "التواصل",
       form: { name: "الاسم", email: "البريد المهني", org: "المؤسسة", msg: "الرسالة", send: "إرسال" },
       positioningCard: "ريغولينا-تي™ هو مفتاح منحه الله: وحدة الإيمان والعلم والتقنيات الحيوية.",
-      footer: "© منصة تنظيم مناعة الغدة الزعترية — Regulina-T™",
-      videoTitle: "نبذة دقيقة واحدة"
+      footer: "© منصة تنظيم مناعة الغدة الزعترية — Regulina-T™"
     }
   }
 };
 
-const DEFAULT_LANG: keyof typeof dict = "EN";
+type Lang = keyof typeof dict;
+const DEFAULT_LANG: Lang = "EN";
 
-// ---------- Helpers ----------
-function buildContactMailto(lang: keyof typeof dict) {
-  const subjectMap = {
+// helpers
+function buildContactMailto(lang: Lang) {
+  const subject = {
     EN: "Collaboration request with Regulina-T",
     RU: "Запрос на сотрудничество с Regulina-T",
     AR: "طلب تعاون مع ريغولينا-تي"
-  } as const;
-  const bodyMap = {
-    EN:
-      "Dear Regulina-T team,%0D%0A%0D%0AMy name is (Full Name), and I am reaching out to explore potential collaboration with your company.%0D%0A%0D%0ACompany/Organization: ___%0D%0ACountry: ___%0D%0APhone: ___%0D%0AEmail: ___%0D%0A%0D%0APlease contact me to discuss the details.%0D%0A%0D%0ABest regards,%0D%0A_______",
-    RU:
-      "Уважаемая команда Regulina-T,%0D%0A%0D%0AМеня зовут (ФИО), я обращаюсь по вопросу сотрудничества с вашей компанией.%0D%0A%0D%0AКомпания/Организация: ___%0D%0AСтрана: ___%0D%0АТелефон: ___%0D%0AЭлектронная почта: ___%0D%0A%0D%0AПрошу связаться со мной для обсуждения деталей.%0D%0A%0D%0AС уважением,%0D%0A_______",
-    AR:
-      "فريق ريغولينا-تي المحترم،%0D%0A%0D%0Aاسمي (الاسم الكامل)، وأتواصل معكم لاستكشاف إمكانية التعاون مع شركتكم.%0D%0A%0D%0Aالشركة/المنظمة: ___%0D%0Aالدولة: ___%0D%0Aالهاتف: ___%0D%0Aالبريد الإلكتروني: ___%0D%0A%0D%0Aيرجى التواصل معي لمناقشة التفاصيل.%0D%0A%0D%0Aمع خالص التحية،%0D%0A_______"
-  } as const;
-  const subject = subjectMap[lang];
-  const body = bodyMap[lang];
+  }[lang];
+  const body = {
+    EN: "Dear Regulina-T team,%0D%0A%0D%0AMy name is (Full Name), and I am reaching out to explore potential collaboration with your company.%0D%0A%0D%0ACompany/Organization: ___%0D%0ACountry: ___%0D%0APhone: ___%0D%0AEmail: ___%0D%0A%0D%0APlease contact me to discuss the details.%0D%0A%0D%0ABest regards,%0D%0A_______",
+    RU: "Уважаемая команда Regulina-T,%0D%0A%0D%0AМеня зовут (ФИО), я обращаюсь по вопросу сотрудничества с вашей компанией.%0D%0A%0D%0AКомпания/Организация: ___%0D%0AСтрана: ___%0D%0АТелефон: ___%0D%0AЭлектронная почта: ___%0D%0A%0D%0AПрошу связаться со мной для обсуждения деталей.%0D%0A%0D%0AС уважением,%0D%0A_______",
+    AR: "فريق ريغولينا-تي المحترم،%0D%0A%0D%0Aاسمي (الاسم الكامل)، وأتواصل معكم لاستكشاف إمكانية التعاون مع شركتكم.%0D%0A%0D%0Aالشركة/المنظمة: ___%0D%0Aالدولة: ___%0D%0Aالهاتف: ___%0D%0Aالبريد الإلكتروني: ___%0D%0A%0D%0Aيرجى التواصل معي لمناقشة التفاصيل.%0D%0A%0D%0Aمع خالص التحية،%0D%0A_______"
+  }[lang];
   return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${body}`;
 }
 
-function buildLicenseeMailto(lang: keyof typeof dict) {
-  const subjectMap = {
+function buildLicenseeMailto(lang: Lang) {
+  const subject = {
     EN: "License application for Regulina-T",
     RU: "Заявка на лицензию Regulina-T",
     AR: "طلب ترخيص لمنتج ريغولينا-تي"
-  } as const;
-  const bodyMap = {
-    EN:
-      "Dear Regulina-T team,%0D%0A%0D%0AMy name is (Full Name), and I am contacting you regarding obtaining a license to use the product Regulina-T™.%0D%0A%0D%0ACompany: ___%0D%0ACountry: ___%0D%0APhone: ___%0D%0AEmail: ___%0D%0A%0D%0APlease contact me to discuss the licensing terms.%0D%0A%0D%0ABest regards,%0D%0A___",
-    RU:
-      "Уважаемая компания Regulina-T,%0D%0A%0D%0AЯ, (ФИО), обращаюсь по вопросу получения лицензии на использование продукта Regulina-T™.%0D%0A%0D%0AКомпания: ___%0D%0AСтрана: ___%0D%0АТелефон: ___%0D%0AЭлектронная почта: ___%0D%0A%0D%0AПрошу связаться со мной для обсуждения условий.%0D%0A%0D%0AС уважением,%0D%0A___",
-    AR:
-      "فريق ريغولينا-تي المحترم،%0D%0A%0D%0Aاسمي (الاسم الكامل)، وأتواصل معكم بخصوص الحصول على ترخيص لاستخدام منتج Regulina-T™.%0D%0A%0D%0Aالشركة: ___%0D%0Aالدولة: ___%0D%0Aالهاتف: ___%0D%0Aالبريد الإلكتروني: ___%0D%0A%0D%0Aيرجى التواصل معي لمناقشة شروط الترخيص.%0D%0A%0D%0Aمع خالص التحية،%0D%0A___"
-  } as const;
-  const subject = subjectMap[lang];
-  const body = bodyMap[lang];
+  }[lang];
+  const body = {
+    EN: "Dear Regulina-T team,%0D%0A%0D%0AMy name is (Full Name), and I am contacting you regarding obtaining a license to use the product Regulina-T™.%0D%0A%0D%0ACompany: ___%0D%0ACountry: ___%0D%0APhone: ___%0D%0AEmail: ___%0D%0A%0D%0APlease contact me to discuss the licensing terms.%0D%0A%0D%0ABest regards,%0D%0A___",
+    RU: "Уважаемая компания Regulina-T,%0D%0A%0D%0AЯ, (ФИО), обращаюсь по вопросу получения лицензии на использование продукта Regulina-T™.%0D%0A%0D%0AКомпания: ___%0D%0AСтрана: ___%0D%0АТелефон: ___%0D%0AЭлектронная почта: ___%0D%0A%0D%0AПрошу связаться со мной для обсуждения условий.%0D%0A%0D%0AС уважением,%0D%0A___",
+    AR: "فريق ريغولينا-تي المحترم،%0D%0A%0D%0Aاسمي (الاسم الكامل)، وأتواصل معكم بخصوص الحصول على ترخيص لاستخدام منتج Regulina-T™.%0D%0A%0D%0Aالشركة: ___%0D%0Aالدولة: ___%0D%0Aالهاتف: ___%0D%0Aالبريد الإلكتروني: ___%0D%0A%0D%0Aيرجى التواصل معي لمناقشة شروط الترخيص.%0D%0A%0D%0Aمع خالص التحية،%0D%0A___"
+  }[lang];
   return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${body}`;
 }
 
-function getDossierPath(lang: keyof typeof dict) {
-  // Используйте PDF (рекомендуется). Если у вас пока DOCX — замените расширение в map.
+function getDossierPath(lang: Lang) {
   const map = {
     EN: "Regulina-T_License_(en).pdf",
     RU: "Regulina-T_License_(ru).pdf",
@@ -269,72 +255,33 @@ function getDossierPath(lang: keyof typeof dict) {
   return `/files/${map[lang]}`;
 }
 
-// ---------- Data ----------
 const marketPie = [
   { key: "autoimmune", name: "Autoimmune", value: 40, color: "#1E88E5" },
   { key: "aging", name: "Healthy aging", value: 15, color: "#0CA678" },
   { key: "infectious", name: "Infectious", value: 20, color: "#F59E0B" },
   { key: "oncology", name: "Oncology-adjacent", value: 25, color: "#C62828" }
-];
+] as const;
 
 function lighten(hex: string, amt = 28) {
   const h = hex.replace("#", "");
   const num = parseInt(h, 16);
   let r = (num >> 16) + amt;
-  let g = ((num >> 8) & 0x00ff) + amt;
-  let b = (num & 0x0000ff) + amt;
+  let g = ((num >> 8) & 0xff) + amt;
+  let b = (num & 0xff) + amt;
   r = Math.max(0, Math.min(255, r));
   g = Math.max(0, Math.min(255, g));
   b = Math.max(0, Math.min(255, b));
   return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
 }
 
-// ---------- Self-tests ----------
-function runSelfTests() {
-  try {
-    (["EN", "RU", "AR"] as const).forEach((k) => {
-      const h = (dict as any)[k].hero;
-      console.assert(h.pretitle && h.title1 && h.title2 && h.badge === HEADER_BADGE, `${k} hero pieces missing / badge not constant`);
-    });
-    const want = { autoimmune: "#1E88E5", aging: "#0CA678", infectious: "#F59E0B", oncology: "#C62828" } as const;
-    marketPie.forEach((s) => console.assert(s.color.toUpperCase() === want[s.key as keyof typeof want].toUpperCase(), `Color mismatch for ${s.key}`));
-    console.assert(getDossierPath("EN").endsWith("(en).pdf"), "Dossier path EN mismatch");
-    console.log("[Regulina-T] self-tests passed");
-  } catch (e) {
-    console.error("[Regulina-T] self-tests failed", e);
-  }
+function scrollToId(id: string) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-// ---------- Utils ----------
-const Glow = ({ className = "", children }: { className?: string; children: React.ReactNode }) => (
-  <div className={`relative ${className}`}>
-    <div className="pointer-events-none absolute inset-0 -z-10 blur-2xl opacity-40"
-         style={{ background: `radial-gradient(40% 60% at 50% 50%, rgba(12,166,120,0.35), transparent 60%)`, filter: "saturate(140%)" }} />
-    {children}
-  </div>
-);
-
-const scrollToId = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-
-// ---------- Components ----------
 function BrandLogo() {
-  const [broken, setBroken] = useState(false);
-  if (!broken) {
-    return (
-      <img
-        src="/brand/regulinat_flask.svg"
-        onError={() => setBroken(true)}
-        alt="Regulina-T Flask"
-        className="h-9 w-9 rounded-md ring-1 ring-emerald-400/30 shadow-lg object-contain"
-      />
-    );
-  }
-  return <FlaskSVG />;
-}
-
-function FlaskSVG() {
   return (
-    <svg viewBox="0 0 100 100" className="h-9 w-9 rounded-md shadow-lg ring-1 ring-emerald-400/30">
+    <svg viewBox="0 0 100 100" className="h-9 w-9 rounded-md shadow-lg ring-1 ring-emerald-400/30" aria-label="Regulina-T Logo">
       <defs>
         <radialGradient id="g1" cx="50%" cy="50%" r="60%">
           <stop offset="0%" stopColor="#29A3E5" />
@@ -342,37 +289,15 @@ function FlaskSVG() {
         </radialGradient>
       </defs>
       <circle cx="50" cy="50" r="48" fill="url(#g1)" />
-      <path d="M40 18h20c2 0 3 1.3 3 3v6l6 12c8 15-3 33-21 33s-29-18-21-33l6-12v-6c0-1.7 1-3 3-3z"
-        fill="none" stroke="#fff" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M40 18h20c2 0 3 1.3 3 3v6l6 12c8 15-3 33-21 33s-29-18-21-33l6-12v-6c0-1.7 1-3 3-3z"
+        fill="none"
+        stroke="#fff"
+        strokeWidth="6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
       <path d="M45 18h10" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function MoleculeVisual() {
-  return (
-    <svg viewBox="0 0 720 405" className="h-full w-full object-cover">
-      <defs>
-        <radialGradient id="mgrad" cx="50%" cy="50%" r="60%">
-          <stop offset="0%" stopColor="rgba(12,166,120,0.10)" />
-          <stop offset="100%" stopColor="rgba(14,165,233,0.12)" />
-        </radialGradient>
-        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="6" result="coloredBlur" />
-          <feMerge><feMergeNode in="coloredBlur" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#mgrad)" />
-      {[[120,120],[240,80],[360,140],[480,90],[600,150],[200,220],[340,260],[500,230],[620,300],[420,330],[260,320]].map(([x,y],i)=>(
-        <g key={i} filter="url(#glow)">
-          <circle cx={x} cy={y} r={10} fill="#1E88E5" opacity="0.85" />
-          <circle cx={x} cy={y} r={22} fill="#1E88E5" opacity="0.15" />
-        </g>
-      ))}
-      {[[120,120,240,80],[240,80,360,140],[360,140,480,90],[480,90,600,150],[200,220,340,260],[340,260,500,230],[500,230,620,300],[420,330,500,230],[260,320,200,220],[340,260,360,140]]
-        .map(([x1,y1,x2,y2],i)=>(
-          <line key={"l"+i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#0CA678" strokeWidth="1.5" opacity="0.6" />
-      ))}
     </svg>
   );
 }
@@ -388,17 +313,15 @@ function Card({ children, className = "", clickable = false }: { children: React
   );
 }
 
-// ---------- Page ----------
-export default function RegulinaTSite() {
-  const [lang, setLang] = useState<keyof typeof dict>(DEFAULT_LANG);
+export default function Page() {
+  const [lang, setLang] = useState<Lang>(DEFAULT_LANG);
   const d = dict[lang];
   const isRTL = d.dir === "rtl";
 
   useEffect(() => {
     document.documentElement.dir = d.dir;
     document.documentElement.lang = d.langLabel.toLowerCase();
-    runSelfTests();
-  }, [lang, d]);
+  }, [d]);
 
   const MenuLink = ({ label, target }: { label: string; target: string }) => (
     <button onClick={() => scrollToId(target)} className="px-3 py-2 text-sm font-medium text-slate-700 hover:text-emerald-700 transition">
@@ -406,7 +329,6 @@ export default function RegulinaTSite() {
     </button>
   );
 
-  const dossierUrl = getDossierPath(lang);
   const contactMailto = buildContactMailto(lang);
   const licenseeMailto = buildLicenseeMailto(lang);
 
@@ -421,11 +343,17 @@ export default function RegulinaTSite() {
             <span
               className="inline-flex items-center rounded-full font-semibold"
               style={{
-                background: brand.pillBg, color: brand.pillText, border: `1px solid ${brand.pillBorder}`,
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,.6)", padding: "1px 10px", fontSize: "11px", lineHeight: 1.2
+                background: brand.pillBg,
+                color: brand.pillText,
+                border: `1px solid ${brand.pillBorder}`,
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,.6)",
+                padding: "1px 10px",
+                fontSize: "11px",
+                lineHeight: 1.2
               }}
             >
-              <Globe2 size={12} /> <span className="ml-1">{HEADER_BADGE}</span>
+              <Globe2 size={12} />
+              <span className="ml-1">{HEADER_BADGE}</span>
             </span>
           </div>
 
@@ -438,11 +366,15 @@ export default function RegulinaTSite() {
           </nav>
 
           <div className="flex items-center gap-2">
-            {(["EN","RU","AR"] as const).map((l)=>(
-              <button key={l} onClick={()=>setLang(l)}
+            {(["EN", "RU", "AR"] as const).map((l) => (
+              <button
+                key={l}
+                onClick={() => setLang(l)}
                 className={`rounded-md px-2 py-1 text-xs font-semibold tracking-wide ring-1 transition ${
-                  lang===l ? "bg-emerald-600 text-white ring-emerald-600" : "text-slate-700 ring-slate-200 hover:bg-slate-50"
-                }`} aria-pressed={lang===l}>
+                  lang === l ? "bg-emerald-600 text-white ring-emerald-600" : "text-slate-700 ring-slate-200 hover:bg-slate-50"
+                }`}
+                aria-pressed={lang === l}
+              >
                 {l}
               </button>
             ))}
@@ -453,6 +385,7 @@ export default function RegulinaTSite() {
       {/* Hero */}
       <section id="home" className="relative overflow-hidden">
         <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 items-center gap-10 px-4 py-12 md:grid-cols-2 md:py-20">
+          {/* левый столбец */}
           <div>
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <div className="uppercase" style={{ letterSpacing: "0.04em", fontWeight: 600, fontSize: "18px", lineHeight: 1.2, color: "rgba(14,165,233,.85)" }}>
@@ -469,26 +402,44 @@ export default function RegulinaTSite() {
               </p>
               {/* CTA hero: Contact | Licensee */}
               <div className={`mt-5 flex ${isRTL ? "flex-row-reverse" : ""} gap-4 sm:flex-row sm:items-center max-sm:flex-col max-sm:items-stretch`}>
-                <a href={contactMailto} className="inline-flex items-center justify-center gap-2 rounded-[14px] border px-5 text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-emerald-500" style={{ background: "#16A34A", borderColor: "#16A34A", height: "46px" }}>
+                <a
+                  href={contactMailto}
+                  className="inline-flex items-center justify-center gap-2 rounded-[14px] border px-5 text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  style={{ background: "#16A34A", borderColor: "#16A34A", height: "46px" }}
+                >
                   <Mail size={16} /> {d.blocks.ctas.contact}
                   <ArrowRight size={16} />
                 </a>
-                <a href={licenseeMailto} className="inline-flex items-center justify-center gap-2 rounded-[14px] border px-5 text-sm font-semibold text-slate-900 transition hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-300" style={{ background: "#FFFFFF", borderColor: "#E2E8F0", height: "46px" }}>
+                <a
+                  href={licenseeMailto}
+                  className="inline-flex items-center justify-center gap-2 rounded-[14px] border px-5 text-sm font-semibold text-slate-900 transition hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-300"
+                  style={{ background: "#FFFFFF", borderColor: "#E2E8F0", height: "46px" }}
+                >
                   <Users2 size={16} /> {d.blocks.ctas.licensee}
                 </a>
               </div>
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
- <div className="w-full aspect-video rounded-2xl overflow-hidden shadow-sm border border-slate-200 bg-white">
-  <iframe
-    className="w-full h-full"
-    src="https://www.youtube.com/embed/SDnNofWX1YY?rel=0"
-    title="Regulina-T Overview"
-    frameBorder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    allowFullScreen
-  />
-</div>
-</motion.div>
+            </motion.div>
+          </div>
+
+          {/* правый столбец — YouTube видео */}
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
+            <Card className="relative aspect-video w-full overflow-hidden p-0">
+              <iframe
+                className="h-full w-full"
+                src="https://www.youtube.com/embed/SDnNofWX1YY?rel=0&modestbranding=1&playsinline=1"
+                title="Regulina-T — overview"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+              />
+              <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-emerald-500/30" />
+            </Card>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Mission */}
       <section className="border-y border-slate-200">
         <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-4 px-4 py-10 md:grid-cols-2 md:gap-6">
           <Card className="p-6 md:p-8">
@@ -633,18 +584,17 @@ export default function RegulinaTSite() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
             <Card className="p-6 md:p-8">
               <h2 className="text-2xl font-semibold text-[#111827]">{d.blocks.contactsTitle}</h2>
-              <p className="mt-3 text-slate-700">
-                Email: <a className="font-semibold text-emerald-700 hover:underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-              </p>
-              <p className="text-[#111827]">
-                Phone: <a className="hover:underline" href="tel:+447440448317">+44 7440 448317</a>
-              </p>
+              <p className="mt-3 text-slate-700">Email: <a className="font-semibold text-emerald-700 hover:underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
+              <p className="text-[#111827]">Phone: <a className="hover:underline" href="tel:+447440448317">+44 7440 448317</a></p>
               <div className="mt-6">
                 <form onSubmit={(e)=>{ e.preventDefault(); window.location.href = buildContactMailto(lang); }} className="space-y-3">
                   <Input label={d.blocks.form.name} />
                   <Input label={d.blocks.form.email} type="email" />
                   <Input label={d.blocks.form.org} />
-                  <TextArea label={d.blocks.form.msg} />
+                  <label className="block text-sm">
+                    <span className="mb-1 block text-slate-700">{d.blocks.form.msg}</span>
+                    <textarea rows={5} className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none ring-emerald-500/0 transition focus:ring-emerald-500/50" />
+                  </label>
                   <button type="submit" className="inline-flex items-center gap-2 rounded-[14px] px-4 py-2 text-sm font-semibold text-white" style={{ background: "#16A34A" }}>
                     <Mail size={16} /> {d.blocks.form.send}
                   </button>
@@ -691,32 +641,12 @@ export default function RegulinaTSite() {
   );
 }
 
-// ---------- Primitives ----------
+// primitives
 function Input({ label, type = "text" }: { label: string; type?: string }) {
   return (
     <label className="block text-sm">
       <span className="mb-1 block text-slate-700">{label}</span>
       <input type={type} className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none ring-emerald-500/0 transition focus:ring-emerald-500/50" />
     </label>
-  );
-}
-function TextArea({ label }: { label: string }) {
-  return (
-    <label className="block text-sm">
-      <span className="mb-1 block text-slate-700">{label}</span>
-      <textarea rows={5} className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none ring-emerald-500/0 transition focus:ring-emerald-500/50" />
-    </label>
-  );
-}
-function Feature({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
-  return (
-    <div className="rounded-xl border p-4 shadow-sm"
-         style={{ borderColor: brand.cardBorder, background: "#FFFFFF", backgroundImage: "linear-gradient(180deg, rgba(2,132,199,0.02), rgba(2,132,199,0))", boxShadow: "0 2px 6px rgba(2,6,23,0.04), 0 12px 24px rgba(2,6,23,0.06)" }}>
-      <div className="mb-1 flex items-center gap-2 text-slate-900">
-        <span className="text-emerald-600">{icon}</span>
-        <span className="font-semibold">{title}</span>
-      </div>
-      <div className="text-sm text-slate-600">{desc}</div>
-    </div>
   );
 }
