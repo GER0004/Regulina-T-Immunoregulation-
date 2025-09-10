@@ -530,34 +530,37 @@ export default function Page() {
       style={{ fontFamily: "var(--font-sans)" }}
     >
      {/* Header with brand name and compact sub-badge under it */}
-<header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-slate-50">
-  <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between px-4 py-3">
-    {/* left: logo + (brand name + badge stacked) */}
+<header className="sticky top-0 z-40 w-full border-b bg-[#F9FAFB]" style={{ borderColor: "#E5E7EB" }}>
+  <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between px-4 py-2.5">
+    {/* ЛЕВО: логотип + (бренд + бейдж под ним) */}
     <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
       {/* Логотип слева */}
       <BrandLogo />
 
-      {/* Справа: название + бейдж под ним */}
-      <div className={`flex flex-col leading-none ${isRTL ? "items-end" : "items-start"}`}>
-        <span className="text-sm font-semibold tracking-wide text-slate-900">
+      {/* Справа от логотипа: бренд и под ним бейдж одной строкой */}
+      <div className={`flex min-w-0 flex-col ${isRTL ? "items-end" : "items-start"}`}>
+        <span className="text-[20px] md:text-[24px] font-extrabold text-[#0B1220] leading-none">
           Regulina-T™
         </span>
 
-        {/* Бейдж: минимальная высота, 4px 8px, скругление-пилюля, 13–14px */}
+        {/* Бейдж: h≈28px, 4px 8px, одна строка, многоточие при нехватке места */}
         <span
-          className="mt-1 inline-flex items-center rounded-full px-2 py-1 text-[13px] font-semibold text-emerald-700 shadow-sm ring-1 ring-emerald-200"
-          style={{ background: "#E6FDF5" }} // мягкий мятный (#E6FDF5). Можно заменить на "#DCFCE7"
+          className={`mt-1 inline-flex h-7 items-center rounded-full border px-2 text-[13px] font-semibold text-[#047857] ${isRTL ? "flex-row-reverse" : ""} truncate whitespace-nowrap`}
+          style={{
+            background: "#E6FDF5",
+            borderColor: "#BBF7D0",
+            maxWidth: "50vw" /* чтобы заработал truncate на узких экранах */,
+          }}
+          title="RGN-T1™ IMMUNOREGULATOR"
         >
-          <Globe2
-            size={12}
-            className={isRTL ? "ml-1" : "mr-1"} // правильный отступ для RTL/LTR
-          />
-          Regulina-T™ | RGN-T1™ IMMUNOREGULATOR
+          {/* Иконка слева/справа с учётом RTL */}
+          <Globe2 size={12} className={isRTL ? "ml-1" : "mr-1"} />
+          RGN-T1™ IMMUNOREGULATOR
         </span>
       </div>
     </div>
 
-    {/* nav (как было) */}
+    {/* (опционально) центр: меню — оставляем как было, либо скройте на мобиле */}
     <nav className="hidden items-center gap-1 md:flex">
       <MenuLink label={d.menu[0]} target="home" />
       <MenuLink label={d.menu[1]} target="science" />
@@ -566,26 +569,28 @@ export default function Page() {
       <MenuLink label={d.menu[4]} target="contacts" />
     </nav>
 
-    {/* переключатель языка (как было) */}
+    {/* ПРАВО: переключатель языков */}
     <div className="flex items-center gap-2">
-      {(["EN", "RU", "AR"] as const).map((l) => (
-        <button
-          key={l}
-          onClick={() => setLang(l)}
-          className={`rounded-md px-2 py-1 text-xs font-semibold tracking-wide ring-1 transition ${
-            lang === l
-              ? "bg-emerald-600 text-white ring-emerald-600"
-              : "text-slate-700 ring-slate-200 hover:bg-slate-100"
-          }`}
-          aria-pressed={lang === l}
-        >
-          {l}
-        </button>
-      ))}
+      {(["EN", "RU", "AR"] as const).map((l) => {
+        const active = lang === l;
+        return (
+          <button
+            key={l}
+            onClick={() => setLang(l)}
+            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+              active
+                ? "bg-emerald-500 text-white border border-transparent"
+                : "bg-white text-slate-800 border border-[#CBD5E1] hover:bg-slate-50"
+            }`}
+            aria-pressed={active}
+          >
+            {l}
+          </button>
+        );
+      })}
     </div>
   </div>
 </header>
-
 
       {/* Hero */}
       <section id="home" className="relative overflow-hidden">
