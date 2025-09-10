@@ -530,58 +530,47 @@ export default function Page() {
       style={{ fontFamily: "var(--font-sans)" }}
     >
      {/* Header with brand name and compact sub-badge under it */}
-<header className="sticky top-0 z-40 w-full border-b bg-[#F9FAFB]" style={{ borderColor: "#E5E7EB" }}>
-  <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between px-4 py-2.5">
-    {/* ЛЕВО: логотип + (бренд + бейдж под ним) */}
-    <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
-      {/* Логотип слева */}
-      <BrandLogo />
+<header className="sticky top-0 z-40 w-full bg-[#F9FAFB] border-b border-slate-200">
+  <div className="mx-auto max-w-[1200px] w-full px-4 py-2 flex items-center justify-between gap-4">
+    {/* ЛЕВО: лого + (бренд + компактный бейдж под ним) */}
+    <div className={`flex items-start gap-3 min-w-0 ${isRTL ? "flex-row-reverse" : ""}`}>
+      {/* Вариант A: файл лого */}
+      {/* <img src="/assets/RegulinaT_logo_roundel.svg" alt="Regulina-T" className="h-[26px] md:h-[28px] w-auto mt-[2px] select-none" /> */}
 
-      {/* Справа от логотипа: бренд и под ним бейдж одной строкой */}
-      <div className={`flex min-w-0 flex-col ${isRTL ? "items-end" : "items-start"}`}>
-        <span className="text-[20px] md:text-[24px] font-extrabold text-[#0B1220] leading-none">
+      {/* Вариант B: inline-логотип (если используете BrandLogo из файла) */}
+      <BrandLogo className="h-[26px] md:h-[28px] w-auto mt-[2px]" />
+
+      <div className={`flex flex-col leading-none min-w-0 ${isRTL ? "items-end" : "items-start"}`}>
+        <span className="text-[20px] md:text-[24px] font-extrabold text-[#0B1220] truncate">
           Regulina-T™
         </span>
 
-        {/* Бейдж: h≈28px, 4px 8px, одна строка, многоточие при нехватке места */}
+        {/* Бейдж: ~в 2 раза меньше, одна строка, с многоточием при нехватке места */}
         <span
-          className={`mt-1 inline-flex h-7 items-center rounded-full border px-2 text-[13px] font-semibold text-[#047857] ${isRTL ? "flex-row-reverse" : ""} truncate whitespace-nowrap`}
-          style={{
-            background: "#E6FDF5",
-            borderColor: "#BBF7D0",
-            maxWidth: "50vw" /* чтобы заработал truncate на узких экранах */,
-          }}
+          className="mt-1 inline-flex items-center h-[20px] px-2 rounded-full
+                     bg-[#E6FDF5] border border-[#BBF7D0]
+                     text-[12px] font-semibold text-[#047857]
+                     whitespace-nowrap overflow-hidden truncate
+                     max-w-[140px] md:max-w-[180px]"
           title="RGN-T1™ IMMUNOREGULATOR"
         >
-          {/* Иконка слева/справа с учётом RTL */}
-          <Globe2 size={12} className={isRTL ? "ml-1" : "mr-1"} />
           RGN-T1™ IMMUNOREGULATOR
         </span>
       </div>
     </div>
 
-    {/* (опционально) центр: меню — оставляем как было, либо скройте на мобиле */}
-    <nav className="hidden items-center gap-1 md:flex">
-      <MenuLink label={d.menu[0]} target="home" />
-      <MenuLink label={d.menu[1]} target="science" />
-      <MenuLink label={d.menu[2]} target="platform" />
-      <MenuLink label={d.menu[3]} target="partnership" />
-      <MenuLink label={d.menu[4]} target="contacts" />
-    </nav>
-
-    {/* ПРАВО: переключатель языков */}
-    <div className="flex items-center gap-2">
-      {(["EN", "RU", "AR"] as const).map((l) => {
+    {/* ПРАВО: языковой свитчер — не должен сдвигать бейдж */}
+    <div className="flex items-center gap-4 shrink-0">
+      {(["EN","RU","AR"] as const).map((l) => {
         const active = lang === l;
         return (
           <button
             key={l}
             onClick={() => setLang(l)}
-            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
-              active
+            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition
+              ${active
                 ? "bg-emerald-500 text-white border border-transparent"
-                : "bg-white text-slate-800 border border-[#CBD5E1] hover:bg-slate-50"
-            }`}
+                : "bg-white text-slate-800 border border-[#CBD5E1] hover:bg-slate-50"}`}
             aria-pressed={active}
           >
             {l}
