@@ -22,9 +22,9 @@ const brand = {
   emerald: "#0CA678",
   sky: "#0EA5E9",
   ink: "#0B1220",
-  headerBg: "#F8FAFC",     // bg-slate-50
-  pillBg: "#BBF7D0",       // emerald-100
-  pillText: "#047857",     // emerald-700
+  headerBg: "#F8FAFC", // bg-slate-50
+  pillBg: "#BBF7D0", // emerald-100
+  pillText: "#047857", // emerald-700
   pillBorder: "#BBF7D0",
   cardBorder: "#D1FAE5",
   cardBg: "#ECFDF5",
@@ -264,14 +264,50 @@ function buildContactMailto(lang: Lang) {
     RU: "Запрос на сотрудничество с Regulina-T",
     AR: "طلب تعاون مع ريغولينا-تي",
   }[lang];
-  const body = {
-    EN: "Dear Regulina-T team,%0D%0A%0D%0AMy name is (Full Name), and I am reaching out to explore potential collaboration with your company.%0D%0A%0D%0ACompany/Organization: ___%0D%0ACountry: ___%0D%0APhone: ___%0D%0AEmail: ___%0D%0A%0D%0APlease contact me to discuss the details.%0D%0A%0D%0ABest regards,%0D%0A_______",
-    RU: "Уважаемая команда Regulina-T,%0D%0A%0D%0AМеня зовут (ФИО), я обращаюсь по вопросу сотрудничества с вашей компанией.%0D%0A%0D%0AКомпания/Организация: ___%0D%0AСтрана: ___%0D%0АТелефон: ___%0D%0AЭлектронная почта: ___%0D%0A%0D%0АПрошу связаться со мной для обсуждения деталей.%0D%0A%0D%0AС уважением,%0D%0A_______",
-    AR: "فريق ريغولينا-تي المحترم،%0D%0A%0D%0Aاسمي (الاسم الكامل)، وأتواصل معكم لاستكشاف إمكانية التعاون مع شركتكم.%0D%0A%0D%0Aالشركة/المنظمة: ___%0D%0Aالدولة: ___%0D%0Aالهاتف: ___%0D%0Aالبريد الإلكتروني: ___%0D%0A%0D%0Aيرجى التواصل معي لمناقشة التفاصيل.%0D%0A%0D%0Aمع خالص التحية،%0D%0A_______",
+  const bodyText = {
+    EN: `Dear Regulina-T team,
+
+My name is (Full Name), and I am reaching out to explore potential collaboration with your company.
+
+Company/Organization: ___
+Country: ___
+Phone: ___
+Email: ___
+
+Please contact me to discuss the details.
+
+Best regards,
+_______`,
+    RU: `Уважаемая команда Regulina-T,
+
+Меня зовут (ФИО), я обращаюсь по вопросу сотрудничества с вашей компанией.
+
+Компания/Организация: ___
+Страна: ___
+Телефон: ___
+Электронная почта: ___
+
+Прошу связаться со мной для обсуждения деталей.
+
+С уважением,
+_______`,
+    AR: `فريق ريغولينا-تي المحترم،
+
+اسمي (الاسم الكامل)، وأتواصل معكم لاستكشاف إمكانية التعاون مع شركتكم.
+
+الشركة/المنظمة: ___
+الدولة: ___
+الهاتف: ___
+البريد الإلكتروني: ___
+
+يرجى التواصل معي لمناقشة التفاصيل.
+
+مع خالص التحية،
+_______`,
   }[lang];
   return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
     subject
-  )}&body=${body}`;
+  )}&body=${encodeURIComponent(bodyText)}`;
 }
 
 function buildLicenseeMailto(lang: Lang) {
@@ -280,14 +316,50 @@ function buildLicenseeMailto(lang: Lang) {
     RU: "Заявка на лицензию Regulina-T",
     AR: "طلب ترخيص لمنتج ريغولينا-تي",
   }[lang];
-  const body = {
-    EN: "Dear Regulina-T team,%0D%0A%0D%0AMy name is (Full Name), and I am contacting you regarding obtaining a license to use the product Regulina-T™.%0D%0A%0D%0ACompany: ___%0D%0ACountry: ___%0D%0APhone: ___%0D%0AEmail: ___%0D%0A%0D%0APlease contact me to discuss the licensing terms.%0D%0A%0D%0ABest regards,%0D%0A___",
-    RU: "Уважаемая компания Regulina-T,%0D%0A%0D%0AЯ, (ФИО), обращаюсь по вопросу получения лицензии на использование продукта Regulina-T™.%0D%0A%0D%0AКомпания: ___%0D%0AСтрана: ___%0D%0АТелефон: ___%0D%0AЭлектронная почта: ___%0D%0A%0D%0AПрошу связаться со мной для обсуждения условий.%0D%0A%0D%0AС уважением,%0D%0A___",
-    AR: "فريق ريغولينا-تي المحترم،%0D%0A%0D%0Aاسمي (الاسم الكامل)، وأتواصل معكم بخصوص الحصول على ترخيص لاستخدام منتج Regulina-T™.%0D%0A%0D%0Aالشركة: ___%0D%0Aالدولة: ___%0D%0Aالهاتف: ___%0D%0Aالبريد الإلكتروني: ___%0D%0A%0D%0Aيرجى التواصل معي لمناقشة شروط الترخيص.%0D%0A%0D%0Aمع خالص التحية،%0D%0A___",
+  const bodyText = {
+    EN: `Dear Regulina-T team,
+
+My name is (Full Name), and I am contacting you regarding obtaining a license to use the product Regulina-T™.
+
+Company: ___
+Country: ___
+Phone: ___
+Email: ___
+
+Please contact me to discuss the licensing terms.
+
+Best regards,
+___`,
+    RU: `Уважаемая компания Regulina-T,
+
+Я, (ФИО), обращаюсь по вопросу получения лицензии на использование продукта Regulina-T™.
+
+Компания: ___
+Страна: ___
+Телефон: ___
+Электронная почта: ___
+
+Прошу связаться со мной для обсуждения условий.
+
+С уважением,
+___`,
+    AR: `فريق ريغولينا-تي المحترم،
+
+اسمي (الاسم الكامل)، وأتواصل معكم بخصوص الحصول على ترخيص لاستخدام منتج Regulina-T™.
+
+الشركة: ___
+الدولة: ___
+الهاتف: ___
+البريد الإلكتروني: ___
+
+يرجى التواصل معي لمناقشة شروط الترخيص.
+
+مع خالص التحية،
+___`,
   }[lang];
   return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
     subject
-  )}&body=${body}`;
+  )}&body=${encodeURIComponent(bodyText)}`;
 }
 
 function getDossierPath(lang: Lang) {
@@ -326,7 +398,7 @@ function scrollToId(id: string) {
 }
 
 /* =========================================================
-   UI primitives (declared BEFORE Page)
+   UI primitives
 ========================================================= */
 function BrandLogo() {
   return (
@@ -457,28 +529,23 @@ export default function Page() {
       className="min-h-screen bg-white text-slate-900 selection:bg-emerald-200/60"
       style={{ fontFamily: "var(--font-sans)" }}
     >
-      {/* Header (compact badge, bg-slate-50) */}
+      {/* Header with compact sub-badge */}
       <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-slate-50">
         <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between px-4 py-3">
-          {/* left: logo + badge (adaptive + RTL) */}
-          <div
-            className={`flex flex-col sm:flex-row sm:items-center sm:gap-3 ${
-              isRTL ? "sm:flex-row-reverse" : ""
-            }`}
-          >
+          {/* left: logo + name + sub-badge under name */}
+          <div className={`flex flex-col ${isRTL ? "items-end" : "items-start"}`}>
             <div className="flex items-center gap-2">
               <BrandLogo />
               <span className="text-sm font-semibold tracking-wide text-slate-900">
                 Regulina-T™
               </span>
             </div>
-
-            <span className="mt-2 inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-sm font-semibold text-emerald-700 shadow-sm sm:mt-0">
+            <span className="mt-1 inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-sm font-medium text-emerald-700 shadow-sm">
               {HEADER_BADGE}
             </span>
           </div>
 
-          {/* nav (optional) */}
+          {/* nav */}
           <nav className="hidden items-center gap-1 md:flex">
             <MenuLink label={d.menu[0]} target="home" />
             <MenuLink label={d.menu[1]} target="science" />
@@ -591,7 +658,7 @@ export default function Page() {
             </motion.div>
           </div>
 
-          {/* right column — YouTube video */}
+          {/* right column — YouTube (clean embed) */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -600,12 +667,13 @@ export default function Page() {
             <Card className="relative aspect-video w-full overflow-hidden p-0">
               <iframe
                 className="h-full w-full"
-                src="https://www.youtube.com/embed/SDnNofWX1YY?rel=0&modestbranding=1&playsinline=1"
+                src="https://www.youtube.com/embed/SDnNofWX1YY?modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&controls=1"
                 title="Regulina-T — overview"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="strict-origin-when-cross-origin"
+                style={{ border: 0 }}
               />
               <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-emerald-500/30" />
             </Card>
@@ -711,10 +779,7 @@ export default function Page() {
                           x2="1"
                           y2="1"
                         >
-                          <stop
-                            offset="0%"
-                            stopColor={lighten(s.color, 28)}
-                          />
+                          <stop offset="0%" stopColor={lighten(s.color, 28)} />
                           <stop offset="100%" stopColor={s.color} />
                         </linearGradient>
                       ))}
