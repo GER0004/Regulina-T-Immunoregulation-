@@ -480,20 +480,15 @@ export default function RegulinaTSite() {
             </motion.div>
           </div>
 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
-<motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
-  <Card className="relative aspect-video w-full overflow-hidden p-0">
-    {/* Убрали любые внешние компоненты и кнопки */}
-    <iframe
-      className="absolute inset-0 h-full w-full"
-      src="https://www.youtube.com/embed/SDnNofWX1YY?rel=0"
-      title="Regulina-T Overview"
-      frameBorder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      referrerPolicy="strict-origin-when-cross-origin"
-      allowFullScreen
-    ></iframe>
-  </Card>
-</motion.div>
+<div className="w-full aspect-video rounded-2xl overflow-hidden shadow-sm border border-slate-200 bg-white">
+  <iframe
+    className="w-full h-full"
+    src="https://www.youtube.com/embed/SDnNofWX1YY?rel=0"
+    title="Regulina-T Overview"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+  />
+</div>
         </div>
       </section>
 
