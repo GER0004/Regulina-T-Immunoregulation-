@@ -39,9 +39,7 @@ function FlaskIcon({ size = 28, className = "" }: { size?: number; className?: s
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* горлышко */}
       <path d="M9 3h6M11 3v4M13 3v4" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" />
-      {/* корпус */}
       <path
         d="M8 7L6.2 10.6c-1.1 2.2.3 4.9 2.7 6a15.5 15.5 0 0 0 6.2 0c2.4-1.1 3.8-3.8 2.7-6L16 7H8Z"
         stroke="currentColor"
@@ -49,13 +47,12 @@ function FlaskIcon({ size = 28, className = "" }: { size?: number; className?: s
         strokeLinejoin="round"
         fill="none"
       />
-      {/* жидкость */}
       <path d="M7.6 13.2c2.2-1.3 6.6-1.3 8.8 0" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" />
     </svg>
   );
 }
 
-/* ===================== Section Title (pill) — уменьшен в 2 раза ===================== */
+/* ===================== Section Title (pill) — компактный ===================== */
 function SectionTitle({
   as = "h2",
   className = "",
@@ -72,7 +69,6 @@ function SectionTitle({
         "inline-block rounded-full border",
         "px-[12px] md:px-[14px] py-[6px] md:py-[8px]",
         "text-[12px] sm:text-[14px] md:text-[16px] lg:text-[18px] font-extrabold leading-tight text-[#0F172A]",
-        "whitespace-normal",
         className,
       ].join(" ")}
       style={{
@@ -470,13 +466,12 @@ function Feature({ icon, title, desc }: { icon: React.ReactNode; title: string; 
 /* ===================== Market Pie (Infographic) ===================== */
 type SegKey = "autoimmune" | "healthyAging" | "infectious" | "oncologyAdjacent" | "transplant";
 const segmentPalette: Record<SegKey, string> = {
-  autoimmune: "#1E88E5", // blue
-  healthyAging: "#0CA678", // green
-  infectious: "#F59E0B", // orange/yellow
-  oncologyAdjacent: "#C62828", // red/burgundy
-  transplant: "#7C3AED", // violet
+  autoimmune: "#1E88E5",
+  healthyAging: "#0CA678",
+  infectious: "#F59E0B",
+  oncologyAdjacent: "#C62828",
+  transplant: "#7C3AED",
 };
-// Временное равенство долей: по 20%
 const marketValues: Record<SegKey, number> = {
   autoimmune: 20,
   healthyAging: 20,
@@ -497,8 +492,6 @@ function lighten(hex: string, amt = 28) {
     .toString(16)
     .padStart(2, "0")}`;
 }
-
-/* Custom tooltip: показывает только название сегмента, без чисел */
 function SegmentTooltip({ active, payload }: any) {
   if (!active || !payload || !payload.length) return null;
   const name = payload[0]?.name as string | undefined;
@@ -550,7 +543,6 @@ function LanguageSwitcher({
     } catch {}
     setCookie("NEXT_LOCALE", l, 365);
 
-    // Если используете под-пути /en /ru /ar — мягко меняем URL
     const path = window.location.pathname;
     const m = path.match(/^\/(en|ru|ar)(\/.*)?$/i);
     if (m) {
@@ -585,7 +577,9 @@ function LanguageSwitcher({
                       rounded-xl border border-slate-200 bg-white p-1 shadow-2xl ring-1 ring-black/5`}
           style={{ transformOrigin: isRTL ? "top left" : "top right" }}
         >
-          {options.map((opt) => (
+          {(["EN","RU","AR"] as Lang[])
+            .filter((x)=>x!==lang)
+            .map((opt) => (
             <button
               key={opt}
               role="option"
@@ -607,10 +601,12 @@ function LanguageSwitcher({
     </div>
   );
 }
+
+/* ===================== Typewriter (для абзаца) ===================== */
 function Typewriter({
   text,
-  cps = 24,          // chars per second: 22–28
-  startDelay = 800,  // мс (после прелоада слогана)
+  cps = 24,
+  startDelay = 800,
   className = "",
 }: {
   text: string;
@@ -627,7 +623,8 @@ function Typewriter({
 
     let i = 0;
     const startT = window.setTimeout(() => {
-      const step = Math.max(1, Math.round(cps / 4)); // порциями, чтобы ровнее
+      const step = Math.max(1, Math.round(cps / 4));
+      let timer: number;
       const tick = () => {
         i = Math.min(text.length, i + step);
         setOut(text.slice(0, i));
@@ -640,8 +637,7 @@ function Typewriter({
       tick();
     }, startDelay);
 
-    let timer: number | undefined;
-    return () => { clearTimeout(startT); if (timer) clearTimeout(timer); };
+    return () => { clearTimeout(startT); };
   }, [text, cps, startDelay]);
 
   return (
@@ -655,9 +651,8 @@ function Typewriter({
 /* ===================== Page ===================== */
 export default function Page() {
   const [lang, setLang] = useState<Lang>(DEFAULT_LANG);
-  const [ultraNarrow, setUltraNarrow] = useState<boolean>(false); // < 320px — короткий заголовок инфографики
+  const [ultraNarrow, setUltraNarrow] = useState<boolean>(false);
 
-  // init language from cookie/localStorage/navigator once
   useEffect(() => {
     const fromCookie = getCookie("NEXT_LOCALE") as Lang | null;
     const fromLS = (typeof window !== "undefined" && localStorage.getItem("NEXT_LOCALE")) as Lang | null;
@@ -667,13 +662,12 @@ export default function Page() {
     setLang(guess);
   }, []);
 
-  // отслеживаем ширину для fallback-заголовка инфографики
- useEffect(() => {
-  const check = () => setUltraNarrow(window.innerWidth <= 330);
-  check();
-  window.addEventListener("resize", check);
-  return () => window.removeEventListener("resize", check);
-}, []);
+  useEffect(() => {
+    const check = () => setUltraNarrow(window.innerWidth <= 330);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const d = dict[lang];
   const isRTL = d.dir === "rtl";
@@ -697,10 +691,8 @@ export default function Page() {
       {/* ===================== Header ===================== */}
       <header className="sticky top-0 z-40 w-full bg-[#F9FAFB] border-b border-slate-200">
         <div className="mx-auto max-w-[1200px] w-full px-6 py-2 flex items-center justify-between gap-4">
-          {/* Left: icon + brand + tiny badge */}
           <div className={`flex items-start gap-3 min-w-0 ${isRTL ? "flex-row-reverse" : ""}`}>
             <FlaskIcon size={28} className="text-[#0EA5E9] dark:text-[#14B8A6] mt-[1px] h-[24px] w-[24px] md:h-[28px] md:w-[28px]" />
-
             <div className={`flex flex-col leading-none ${isRTL ? "items-end" : "items-start"}`}>
               <span className="text-[20px] md:text-[24px] font-extrabold text-[#0B1220]">Regulina-T™</span>
               <span
@@ -715,7 +707,6 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Center nav (hidden on small) */}
           <nav className="hidden items-center gap-1 md:flex">
             <MenuLink label={d.menu[0]} target="home" />
             <MenuLink label={d.menu[1]} target="science" />
@@ -724,7 +715,6 @@ export default function Page() {
             <MenuLink label={d.menu[4]} target="contacts" />
           </nav>
 
-          {/* Right: Language switcher */}
           <div className="flex items-center gap-4 shrink-0">
             <LanguageSwitcher lang={lang} onChange={setLang} isRTL={isRTL} />
           </div>
@@ -732,24 +722,29 @@ export default function Page() {
       </header>
 
       {/* ===================== Hero ===================== */}
-     {/* Slogan / Pretitle */}
-<div className="rt-fadeUp max-w-[88%] md:max-w-[680px] lg:max-w-[720px]">
-  <div
-    key={lang}
-    className="uppercase"
-    style={{
-      letterSpacing: "0.04em",
-      fontWeight: 600,
-      lineHeight: 1.2,
-      color: "rgba(14,165,233,.85)",
-      minHeight: "2.5em",
-      fontSize: "clamp(16px,4.2vw,20px)", // мобайл
-    }}
-  >
-    <span className="block md:text-[clamp(20px,2.6vw,22px)] lg:text-[clamp(22px,2vw,24px)]">
-      {d.hero.pretitle}
-    </span>
-  </div>
+      <section id="home" className="relative overflow-hidden">
+        <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 items-center gap-10 px-4 py-12 md:grid-cols-2 md:py-20">
+          {/* left */}
+          <div>
+            {/* Slogan with fade + slide-up; переносы разрешены; ширина ограничена */}
+            <div className="rt-fadeUp max-w-[88%] md:max-w-[680px] lg:max-w-[720px]">
+              <div
+                key={lang}
+                className="uppercase"
+                style={{
+                  letterSpacing: "0.04em",
+                  fontWeight: 600,
+                  lineHeight: 1.2,
+                  color: "rgba(14,165,233,.85)",
+                  minHeight: "2.5em",
+                  fontSize: "clamp(16px,4.2vw,20px)", // mobile
+                }}
+              >
+                <span className="block md:text-[clamp(20px,2.6vw,22px)] lg:text=[clamp(22px,2vw,24px)]">
+                  {d.hero.pretitle}
+                </span>
+              </div>
+            </div>
 
             <h1 className="mt-3 font-extrabold" style={{ color: brand.ink, fontSize: "36px", lineHeight: 1.1 }}>
               <span className="block md:text-[60px]" style={{ fontSize: "36px", lineHeight: 1.1 }}>
@@ -759,11 +754,16 @@ export default function Page() {
             <div className="mt-1 font-bold" style={{ color: brand.ink, opacity: 0.9, fontSize: "24px", lineHeight: 1.2 }}>
               <span className="block md:text-[42px]">{d.hero.title2}</span>
             </div>
-            <p className="mt-4 max-w-[720px]" style={{ fontSize: "18px", lineHeight: 1.6, color: "rgba(11,18,32,.72)" }}>
-              Regulina-T™ — {d.hero.paragraph}
+
+            {/* Paragraph with typewriter; ширина синхронизирована со слоганом */}
+            <p
+              className="mt-4 max-w-[88%] md:max-w-[680px] lg:max-w-[720px]"
+              style={{ fontSize: "18px", lineHeight: 1.6, color: "rgba(11,18,32,.72)", minHeight: "3.2em" }}
+            >
+              <Typewriter text={`Regulina-T™ — ${d.hero.paragraph}`} cps={24} startDelay={1000} />
             </p>
 
-            {/* CTA: Contact | Licensee */}
+            {/* CTA */}
             <div className={`mt-5 flex ${isRTL ? "flex-row-reverse" : ""} gap-4 sm:flex-row sm:items-center max-sm:flex-col max-sm:items-stretch`}>
               <a
                 href={buildContactMailto(lang)}
@@ -782,7 +782,7 @@ export default function Page() {
             </div>
           </div>
 
-          {/* right — YouTube (clean embed) */}
+          {/* right — YouTube */}
           <div>
             <Card className="relative aspect-video w-full overflow-hidden p-0">
               <iframe
@@ -826,7 +826,7 @@ export default function Page() {
         </div>
       </section>
 
-      {/* ===================== Science ===================== */}
+      {/* ===================== Science + Infographic ===================== */}
       <section id="science" className="scroll-mt-20">
         <div className="mx-auto max-w-[1200px] px-4 pt-8 md:pt-10 pb-4 md:pb-5">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -855,141 +855,137 @@ export default function Page() {
               </div>
             </Card>
 
-            {/* Инфографика — 5 сегментов */}
-         <Card className="p-6 md:p-8 overflow-visible">
-  {/* Заголовок: одна строка, авто-подгон, не обрезается */}
-  <h3
-    className="mb-4 mt-7 pr-4 md:pr-5 font-normal text-[#0F172A]
-               whitespace-nowrap [word-break:keep-all] [hyphens:none]
-               text-[clamp(18px,5vw,22px)] md:text-[clamp(24px,2.6vw,32px)]"
-  >
-    {ultraNarrow ? dict[lang].infographic.shortTitle : dict[lang].infographic.title}
-  </h3>
+            {/* Инфографика */}
+            <Card className="p-6 md:p-8 overflow-visible">
+              <h3
+                className="mb-4 mt-7 pr-4 md:pr-5 font-normal text-[#0F172A]
+                           whitespace-nowrap [word-break:keep-all] [hyphens:none]
+                           text-[clamp(18px,5vw,22px)] md:text-[clamp(24px,2.6vw,32px)]"
+              >
+                {ultraNarrow ? dict[lang].infographic.shortTitle : dict[lang].infographic.title}
+              </h3>
 
-  {/* Скругляем и «режем» только графику, не заголовок */}
-  <div className="overflow-hidden rounded-xl">
-    <figure role="group" aria-label="Market segments donut chart" className={`${isRTL ? "text-right" : ""}`}>
-      <div className="h-64 w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <defs>
-              {( ["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[] ).map((k) => (
-                <linearGradient id={`grad-${k}`} key={k} x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor={lighten(segmentPalette[k], 28)} />
-                  <stop offset="100%" stopColor={segmentPalette[k]} />
-                </linearGradient>
-              ))}
-            </defs>
+              <div className="overflow-hidden rounded-xl">
+                <figure role="group" aria-label="Market segments donut chart" className={`${isRTL ? "text-right" : ""}`}>
+                  <div className="h-64 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <defs>
+                          {( ["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[] ).map((k) => (
+                            <linearGradient id={`grad-${k}`} key={k} x1="0" y1="0" x2="1" y2="1">
+                              <stop offset="0%" stopColor={lighten(segmentPalette[k], 28)} />
+                              <stop offset="100%" stopColor={segmentPalette[k]} />
+                            </linearGradient>
+                          ))}
+                        </defs>
 
-            <Pie
-              data={(["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[]).map((k) => ({
-                key: k,
-                name:
-                  k === "transplant"
-                    ? dict[lang].segments.transplantationTherapy
-                    : k === "autoimmune"
-                    ? dict[lang].segments.autoimmune
-                    : k === "healthyAging"
-                    ? dict[lang].segments.healthyAging
-                    : k === "infectious"
-                    ? dict[lang].segments.infectious
-                    : dict[lang].segments.oncologyAdjacent,
-                value: marketValues[k],
-                fill: `url(#grad-${k})`,
-              }))}
-              dataKey="value"
-              nameKey="name"
-              outerRadius={90}
-              innerRadius={40}
-              stroke="rgba(15,23,42,0.12)"
-              strokeWidth={1}
-              isAnimationActive
-            >
-              {( ["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[] ).map((k) => {
-                const label =
-                  k === "transplant"
-                    ? dict[lang].segments.transplantationTherapy
-                    : k === "autoimmune"
-                    ? dict[lang].segments.autoimmune
-                    : k === "healthyAging"
-                    ? dict[lang].segments.healthyAging
-                    : k === "infectious"
-                    ? dict[lang].segments.infectious
-                    : dict[lang].segments.oncologyAdjacent;
-                return (
-                  <Cell key={`cell-${k}`} fill={`url(#grad-${k})`}>
-                    <title>{label}</title>
-                  </Cell>
-                );
-              })}
-            </Pie>
+                        <Pie
+                          data={(["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[]).map((k) => ({
+                            key: k,
+                            name:
+                              k === "transplant"
+                                ? dict[lang].segments.transplantationTherapy
+                                : k === "autoimmune"
+                                ? dict[lang].segments.autoimmune
+                                : k === "healthyAging"
+                                ? dict[lang].segments.healthyAging
+                                : k === "infectious"
+                                ? dict[lang].segments.infectious
+                                : dict[lang].segments.oncologyAdjacent,
+                            value: marketValues[k],
+                            fill: `url(#grad-${k})`,
+                          }))}
+                          dataKey="value"
+                          nameKey="name"
+                          outerRadius={90}
+                          innerRadius={40}
+                          stroke="rgba(15,23,42,0.12)"
+                          strokeWidth={1}
+                          isAnimationActive
+                        >
+                          {( ["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[] ).map((k) => {
+                            const label =
+                              k === "transplant"
+                                ? dict[lang].segments.transplantationTherapy
+                                : k === "autoimmune"
+                                ? dict[lang].segments.autoimmune
+                                : k === "healthyAging"
+                                ? dict[lang].segments.healthyAging
+                                : k === "infectious"
+                                ? dict[lang].segments.infectious
+                                : dict[lang].segments.oncologyAdjacent;
+                            return (
+                              <Cell key={`cell-${k}`} fill={`url(#grad-${k})`}>
+                                <title>{label}</title>
+                              </Cell>
+                            );
+                          })}
+                        </Pie>
 
-            {/* Тултип без процентов — только название */}
-            <Tooltip content={<SegmentTooltip />} />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
+                        <Tooltip content={<SegmentTooltip />} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
 
-      {/* Легенда — без процентов */}
-      <div
-        className={`mx-auto mt-3 grid max-w-[520px] grid-cols-1 gap-x-4 gap-y-2 text-xs sm:grid-cols-2 ${
-          isRTL ? "text-right" : ""
-        }`}
-        aria-label="Legend"
-      >
-        {( ["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[] ).map((k) => {
-          const label =
-            k === "transplant"
-              ? dict[lang].segments.transplantationTherapy
-              : k === "autoimmune"
-              ? dict[lang].segments.autoimmune
-              : k === "healthyAging"
-              ? dict[lang].segments.healthyAging
-              : k === "infectious"
-              ? dict[lang].segments.infectious
-              : dict[lang].segments.oncologyAdjacent;
-          return (
-            <button
-              key={k}
-              type="button"
-              className="group flex min-h-8 items-center gap-3 rounded-md px-2 py-1 hover:bg-white/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-              aria-label={label}
-            >
-              <span
-                className="inline-flex h-2.5 w-2.5 shrink-0 rounded-full"
-                style={{ background: segmentPalette[k] }}
-                aria-hidden="true"
-              />
-              <span className="text-[#111827]">{label}</span>
-            </button>
-          );
-        })}
-      </div>
+                  <div
+                    className={`mx-auto mt-3 grid max-w-[520px] grid-cols-1 gap-x-4 gap-y-2 text-xs sm:grid-cols-2 ${
+                      isRTL ? "text-right" : ""
+                    }`}
+                    aria-label="Legend"
+                  >
+                    {( ["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[] ).map((k) => {
+                      const label =
+                        k === "transplant"
+                          ? dict[lang].segments.transplantationTherapy
+                          : k === "autoimmune"
+                          ? dict[lang].segments.autoimmune
+                          : k === "healthyAging"
+                          ? dict[lang].segments.healthyAging
+                          : k === "infectious"
+                          ? dict[lang].segments.infectious
+                          : dict[lang].segments.oncologyAdjacent;
+                      return (
+                        <button
+                          key={k}
+                          type="button"
+                          className="group flex min-h-8 items-center gap-3 rounded-md px-2 py-1 hover:bg-white/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                          aria-label={label}
+                        >
+                          <span
+                            className="inline-flex h-2.5 w-2.5 shrink-0 rounded-full"
+                            style={{ background: segmentPalette[k] }}
+                            aria-hidden="true"
+                          />
+                          <span className="text-[#111827]">{label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
 
-      <figcaption className="sr-only">
-        {(["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[])
-          .map((k) => {
-            const label =
-              k === "transplant"
-                ? dict[lang].segments.transplantationTherapy
-                : k === "autoimmune"
-                ? dict[lang].segments.autoimmune
-                : k === "healthyAging"
-                ? dict[lang].segments.healthyAging
-                : k === "infectious"
-                ? dict[lang].segments.infectious
-                : dict[lang].segments.oncologyAdjacent;
-            return label;
-          })
-          .join("; ")}
-      </figcaption>
-    </figure>
-  </div>
+                  <figcaption className="sr-only">
+                    {(["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[])
+                      .map((k) => {
+                        const label =
+                          k === "transplant"
+                            ? dict[lang].segments.transplantationTherapy
+                            : k === "autoimmune"
+                            ? dict[lang].segments.autoimmune
+                            : k === "healthyAging"
+                            ? dict[lang].segments.healthyAging
+                            : k === "infectious"
+                            ? dict[lang].segments.infectious
+                            : dict[lang].segments.oncologyAdjacent;
+                        return label;
+                      })
+                      .join("; ")}
+                  </figcaption>
+                </figure>
+              </div>
 
-  <p className="mt-3 text-xs text-slate-500">
-    Illustrative split. Final segmentation to be refined with market research.
-  </p>
-</Card>
+              <p className="mt-3 text-xs text-slate-500">
+                Illustrative split. Final segmentation to be refined with market research.
+              </p>
+            </Card>
           </div>
         </div>
       </section>
