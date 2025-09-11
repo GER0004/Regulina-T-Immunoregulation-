@@ -59,3 +59,49 @@ font-size: clamp(12px, 1.6vw, 16px);
 .rt-slide-in { animation: none !important; }
 .rt-caret { display:none !important; }
 }
+
+/* === Glass / 3D chips для названий секций и KPI === */
+.glass-chip {
+  background: rgba(255,255,255,.58);
+  border: 1px solid rgba(255,255,255,.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.55),
+    0 8px 24px rgba(0,0,0,.10);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.dark .glass-chip {
+  background: rgba(18,20,23,.42);
+  border-color: rgba(255,255,255,.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 10px 28px rgba(0,0,0,.28);
+}
+
+/* Квадратный прозрачный бейдж (по умолчанию без сильных скруглений) */
+.square-chip {
+  border-radius: 14px;         /* «квадратный» вид, не «таблетка» */
+  padding: 10px 14px;
+  line-height: 1.1;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Инфографика: ничего не вылезает за карточку */
+.infographic-card { overflow: hidden; }
+
+/* Длинные подписи (RU/AR) не ломают сетку, красиво переносятся */
+.legend-item {
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* Безопасные поля вокруг контента инфографики */
+.infographic-inner {
+  padding: clamp(16px, 3vw, 24px);
+}
+
+/* Бейджи в навигации/названиях блоков – единый стиль */
+.section-name {
+  @apply glass-chip square-chip text-emerald-800/90 dark:text-emerald-200/90;
+}
