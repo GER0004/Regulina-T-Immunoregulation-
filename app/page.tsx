@@ -732,22 +732,24 @@ export default function Page() {
       </header>
 
       {/* ===================== Hero ===================== */}
-      <section id="home" className="relative overflow-hidden">
-        <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 items-center gap-10 px-4 py-12 md:grid-cols-2 md:py-20">
-          {/* left */}
-          <div>
-           <div
-  key={lang} /* чтобы анимация срабатывала и при смене языка */
-  className="rt-fadeUp whitespace-nowrap [word-break:keep-all] [hyphens:none] uppercase"
-  style={{
-    letterSpacing: "0.04em",   // +4% tracking
-    fontWeight: 600,           // 600
-    fontSize: "18px",          // можно 20px на десктопе, если хотите
-    lineHeight: 1.2,
-    color: "rgba(14,165,233,.85)" // #0EA5E9 @ 85%
-  }}
->
-  {d.hero.pretitle}
+     {/* Slogan / Pretitle */}
+<div className="rt-fadeUp max-w-[88%] md:max-w-[680px] lg:max-w-[720px]">
+  <div
+    key={lang}
+    className="uppercase"
+    style={{
+      letterSpacing: "0.04em",
+      fontWeight: 600,
+      lineHeight: 1.2,
+      color: "rgba(14,165,233,.85)",
+      minHeight: "2.5em",
+      fontSize: "clamp(16px,4.2vw,20px)", // мобайл
+    }}
+  >
+    <span className="block md:text-[clamp(20px,2.6vw,22px)] lg:text-[clamp(22px,2vw,24px)]">
+      {d.hero.pretitle}
+    </span>
+  </div>
 </div>
 
             <h1 className="mt-3 font-extrabold" style={{ color: brand.ink, fontSize: "36px", lineHeight: 1.1 }}>
