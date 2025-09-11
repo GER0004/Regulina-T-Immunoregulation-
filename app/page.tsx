@@ -531,33 +531,33 @@ export default function Page() {
     >
      {/* Header with brand name and compact sub-badge under it */}
 <header className="sticky top-0 z-40 w-full bg-[#F9FAFB] border-b border-slate-200">
-  <div className="mx-auto max-w-[1200px] w-full px-4 py-2 flex items-center justify-between gap-4 md:gap-6">
-    {/* ЛЕВО: лого + (бренд + маленький бейдж под ним) */}
-    <div className={`flex items-start gap-3 min-w-0 ${isRTL ? "flex-row-reverse" : ""}`}>
-      {/* Логотип: 26–28px, без рамок/теней */}
-      {/* Если у вас есть файл логотипа, используйте <img>; иначе оставьте <BrandLogo /> */}
-      {/* <img src="/assets/RegulinaT_logo_roundel.svg" alt="Regulina-T" className="h-[26px] md:h-[28px] w-auto mt-[2px] select-none" /> */}
+  <div className="mx-auto max-w-[1200px] w-full px-4 py-2 flex items-center justify-between gap-4">
+    {/* ЛЕВО: лого + (бренд и под ним компактный бейдж) */}
+    <div className={`flex items-start gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
+      {/* Лого 26–28px, без рамок/теней */}
+      {/* Если используете файл-логотип: <img src="/assets/RegulinaT_logo_roundel.svg" alt="Regulina-T" className="h-[26px] md:h-[28px] w-auto mt-[2px]" /> */}
       <BrandLogo className="h-[26px] md:h-[28px] w-auto mt-[2px]" />
 
-      {/* Бренд + бейдж */}
       <div className={`flex flex-col leading-none ${isRTL ? "items-end" : "items-start"}`}>
-        {/* Название — как сейчас, крупнее бейджа */}
+        {/* Название — как сейчас (крупнее бейджа) */}
         <span className="text-[20px] md:text-[24px] font-extrabold text-[#0B1220]">
           Regulina-T™
         </span>
 
-        {/* Бейдж: 12–13px, высота ~16–18px, padding 2px 8px, ВСЕГДА в одну строку, без многоточий */}
+        {/* Ультра-компактный бейдж: ~10–12px высота, 10–11px шрифт, 1px/6px паддинги, ВСЕГДА одна строка, без обрезаний */}
         <span
-          className="mt-1 inline-flex items-center rounded-full border px-2 py-0.5 text-[12px] md:text-[13px] font-semibold text-[#047857] whitespace-nowrap"
-          style={{ background: "#E6FDF5", borderColor: "#BBF7D0", height: "18px" }}
+          className="mt-1 inline-flex items-center rounded-full border px-1.5 py-px
+                     text-[10px] md:text-[11px] leading-[10px] md:leading-[11px]
+                     font-semibold text-[#047857] whitespace-nowrap"
+          style={{ background: "#F0FDF4", borderColor: "#BBF7D0" }}  // фон чуть светлее, чем раньше
         >
           RGN-T1™ IMMUNOREGULATOR
         </span>
       </div>
     </div>
 
-    {/* ПРАВО: языковой свитчер (EN/RU/AR), справа на одном уровне, со стабильным отступом */}
-    <div className="flex items-center gap-2 shrink-0">
+    {/* ПРАВО: языковой свитчер (с зазором ≥16px от бренда) */}
+    <div className="flex items-center gap-4 shrink-0">
       {(["EN","RU","AR"] as const).map((l) => {
         const active = lang === l;
         return (
