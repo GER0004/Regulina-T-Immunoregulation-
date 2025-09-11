@@ -11,9 +11,33 @@
 html, body{
   font-family: var(--font-sans);
   background: #ffffff;
+  overflow-x: hidden; /* фикс горизонтальной прокрутки */
 }
 
-/* === Hero pretitle: fade-in + slide-up === */
+/* ====== стеклянная плашка (для заголовков секций) ====== */
+.rt-glass{
+  background: linear-gradient( to bottom, rgba(255,255,255,0.72), rgba(255,255,255,0.50) );
+  border: 1px solid rgba(15,23,42,0.16);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.6) inset,
+    0 8px 24px rgba(2,6,23,0.08),
+    0 18px 40px rgba(2,6,23,0.10);
+  backdrop-filter: saturate(140%) blur(8px);
+}
+
+/* ====== reveal on view (fade + up) ====== */
+.rt-reveal{
+  opacity: 0;
+  transform: translateY(12px);
+  will-change: opacity, transform;
+  transition: opacity .38s ease-out, transform .38s ease-out;
+}
+.rt-reveal.in{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* === Hero pretitle: fade-in + slide-up (при загрузке) === */
 @keyframes rt-fadeUp {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -33,6 +57,8 @@ html, body{
 
 /* уважение настроек reduce-motion */
 @media (prefers-reduced-motion: reduce) {
-  .rt-fadeUp { animation: none !important; }
-  .rt-caret { display: none !important; }
+  .rt-reveal{ opacity:1 !important; transform:none !important; transition:none !important; }
+  .rt-fadeUp{ animation: none !important; }
+  .rt-caret{ display: none !important; }
 }
+
