@@ -523,7 +523,7 @@ useEffect(() => {
     </button>
   );
 
-  return (
+  return 
     <div className="min-h-screen overflow-x-hidden bg-white text-slate-900 selection:bg-emerald-200/60" style={{ fontFamily:"var(--font-sans)" }}>
       {/* ===== Header ===== */}
       <header className="sticky top-0 z-40 w-full bg-[#F9FAFB] border-b border-slate-200">
