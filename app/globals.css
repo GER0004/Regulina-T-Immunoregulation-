@@ -3,15 +3,16 @@
 @tailwind utilities;
 
 /* системный стек шрифта (без внешних подключений) */
-:root {
+:root{
   --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+               Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
-html, body {
+html, body{
   font-family: var(--font-sans);
   background: #ffffff;
 }
+
 /* === Hero pretitle: fade-in + slide-up === */
 @keyframes rt-fadeUp {
   from { opacity: 0; transform: translateY(8px); }
@@ -30,8 +31,8 @@ html, body {
   animation: rt-caret-blink 1s steps(1) infinite;
 }
 
-/* Учитываем настройки пользователя */
+/* уважение настроек reduce-motion */
 @media (prefers-reduced-motion: reduce) {
   .rt-fadeUp { animation: none !important; }
-  .rt-caret { display:none !important; }
+  .rt-caret { display: none !important; }
 }
