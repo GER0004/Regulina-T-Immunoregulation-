@@ -26,8 +26,8 @@ function useInViewOnce(options?: IntersectionObserverInit){
   const [inView, setInView] = useState(false);
   useEffect(()=>{
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-    if (reduce) { setInView(true); return; }
-    if(!ref.current) return;
+    if (reduce) { setInView(true); return }
+    if(!ref.current) return
     const obs = new IntersectionObserver(([e])=>{
       if(e.isIntersecting){
         setInView(true);
@@ -402,7 +402,7 @@ function LanguageSwitcher({ lang, onChange, isRTL }:{ lang:Lang; onChange:(l:Lan
   const options:Lang[] = useMemo(()=> (["EN","RU","AR"] as Lang[]).filter(l=>l!==lang),[lang]);
   const listId="lang-listbox";
   useEffect(()=>{
-    if(!open) return;
+    if(!open) return
     const onDoc=(e:MouseEvent)=>{ const t=e.target as Node;
       if(!listRef.current?.contains(t) && !btnRef.current?.contains(t)) setOpen(false); };
     const onEsc=(e:KeyboardEvent)=>{ if(e.key==="Escape") setOpen(false); };
@@ -477,7 +477,7 @@ export default function Page(){
     const apply = () => {
       const t = titleRef.current;
       const p = pillRef.current;
-      if (!t || !p) return;
+      if (!t || !p) return
       const w = Math.ceil(t.offsetWidth);
       p.style.width = `${w}px`;
     };
