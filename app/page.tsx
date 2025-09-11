@@ -469,25 +469,6 @@ export default function Page(){
   const d = dict[lang]; const isRTL = d.dir==="rtl";
   useEffect(()=>{ document.documentElement.dir = d.dir; document.documentElement.lang = lang.toLowerCase(); },[d.dir,lang]);
 
-  // <<< БЕЗОПАСНЫЙ эффект для Safari: подгонка ширины бейджа к ширине заголовка
-  useEffect(() => {
-    const apply = () => {
-      const t = titleRef.current;
-      const p = pillRef.current;
-      if (!t || !p) return;
-      const w = Math.ceil(t.offsetWidth);
-      p.style.width = `${w}px`;
-    };
-    apply();
-    const t1 = setTimeout(apply, 150);
-    const t2 = setTimeout(apply, 400);
-    const t3 = setTimeout(apply, 1000);
-    window.addEventListener("resize", apply);
-    return () => {
-      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
-      window.removeEventListener("resize", apply);
-    };
-  }, [lang]);
 
   const MenuLink=({label,target}:{label:string;target:string;})=>(
     <button onClick={()=>scrollToId(target)} className="px-3 py-2 text-sm font-medium text-slate-700 hover:text-emerald-700 transition">
