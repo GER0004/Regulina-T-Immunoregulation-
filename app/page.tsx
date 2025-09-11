@@ -26,8 +26,8 @@ function useInViewOnce(options?: IntersectionObserverInit){
   const [inView, setInView] = useState(false);
   useEffect(()=>{
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-    if (reduce) { setInView(true); return }
-    if(!ref.current) return
+    if (reduce) { setInView(true); return; }
+    if(!ref.current) return;
     const obs = new IntersectionObserver(([e])=>{
       if(e.isIntersecting){
         setInView(true);
@@ -402,7 +402,7 @@ function LanguageSwitcher({ lang, onChange, isRTL }:{ lang:Lang; onChange:(l:Lan
   const options:Lang[] = useMemo(()=> (["EN","RU","AR"] as Lang[]).filter(l=>l!==lang),[lang]);
   const listId="lang-listbox";
   useEffect(()=>{
-    if(!open) return
+    if(!open) return;
     const onDoc=(e:MouseEvent)=>{ const t=e.target as Node;
       if(!listRef.current?.contains(t) && !btnRef.current?.contains(t)) setOpen(false); };
     const onEsc=(e:KeyboardEvent)=>{ if(e.key==="Escape") setOpen(false); };
@@ -477,7 +477,7 @@ export default function Page(){
     const apply = () => {
       const t = titleRef.current;
       const p = pillRef.current;
-      if (!t || !p) return
+      if (!t || !p) return;
       const w = Math.ceil(t.offsetWidth);
       p.style.width = `${w}px`;
     };
@@ -506,28 +506,15 @@ export default function Page(){
           <div className={`flex items-start gap-3 min-w-0 ${isRTL ? "flex-row-reverse" : ""}`}>
             <FlaskIcon size={28} className="text-[#0EA5E9] dark:text-[#14B8A6] mt-[1px] h-[24px] w-[24px] md:h-[28px] md:w-[28px]" />
             <div className={`flex flex-col leading-none ${isRTL ? "items-end" : "items-start"}`}>
-             <span
-  ref={pillRef}
-  className="mt-1 inline-flex items-center justify-center rounded-full border px-[8px] py-[2px]
-             text-[9px] sm:text-[10px] md:text-[11px] tracking-[0.04em] leading-[12px]
-             font-semibold text-[#047857] whitespace-nowrap"
-  style={{
-    background: "#E6FDF5",
-    borderColor: brand.pillBorder,
-    height: "16px",
-    boxSizing: "border-box",
-  }}
-  aria-hidden="true"
->
-  RGN-T1™ IMMUNOREGULATOR
-</span>
-
+              <span
+                ref={titleRef}
+                className="text-[20px] md:text-[24px] font-extrabold text-[#0B1220] whitespace-nowrap [word-break:keep-all] [hyphens:none]"
+              >
+                Regulina-T™
+              </span>
               <span
                 ref={pillRef}
                 className="mt-1 inline-flex items-center justify-center rounded-full border px-[8px] py-[2px]
-           text-[9px] sm:text-[10px] md:text-[11px] tracking-[0.04em] leading-[12px]
-           font-semibold text-[#047857] whitespace-nowrap"
-
                            text-[10px] md:text-[11px] leading-[12px] font-semibold text-[#047857] whitespace-nowrap"
                 style={{
                   background:"#E6FDF5",
@@ -935,3 +922,4 @@ export default function Page(){
     </div>
   );
 }
+
