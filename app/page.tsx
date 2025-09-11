@@ -11,7 +11,7 @@ import {
   Shield,
   Check,
 } from "lucide-react";
-import { PieChart, Pie, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import { PieChart, Pie, ResponsiveContainer, Tooltip } from "recharts";
 
 /* ===================== Brand / Theme ===================== */
 const brand = {
@@ -39,7 +39,9 @@ function FlaskIcon({ size = 28, className = "" }: { size?: number; className?: s
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
+      {/* горлышко */}
       <path d="M9 3h6M11 3v4M13 3v4" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" />
+      {/* корпус */}
       <path
         d="M8 7L6.2 10.6c-1.1 2.2.3 4.9 2.7 6a15.5 15.5 0 0 0 6.2 0c2.4-1.1 3.8-3.8 2.7-6L16 7H8Z"
         stroke="currentColor"
@@ -47,8 +49,41 @@ function FlaskIcon({ size = 28, className = "" }: { size?: number; className?: s
         strokeLinejoin="round"
         fill="none"
       />
+      {/* жидкость */}
       <path d="M7.6 13.2c2.2-1.3 6.6-1.3 8.8 0" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" />
     </svg>
+  );
+}
+
+/* ===================== Section Title (pill) ===================== */
+function SectionTitle({
+  as = "h2",
+  className = "",
+  children,
+}: {
+  as?: "h2" | "h3";
+  className?: string;
+  children: React.ReactNode;
+}) {
+  const Tag = as as any;
+  return (
+    <Tag
+      className={[
+        "inline-block rounded-full border",
+        // мобайл: 14–16px x 8px; десктоп: 18–20px x 10px
+        "px-[14px] md:px-[18px] py-2 md:py-[10px]",
+        // типографика
+        "text-[22px] sm:text-[24px] md:text-[28px] lg:text-[32px] font-extrabold leading-tight text-[#0F172A]",
+        "whitespace-normal",
+        className,
+      ].join(" ")}
+      style={{
+        background: "rgba(15,23,42,0.12)",
+        borderColor: "rgba(15,23,42,0.16)",
+      }}
+    >
+      {children}
+    </Tag>
   );
 }
 
@@ -64,6 +99,13 @@ const dict = {
       title2: "Thymus regeneration & immunoregulator",
       paragraph:
         "a solution uniting faith, science, and modern biotech — opening a new era in immunology and medicine.",
+    },
+    segments: {
+      autoimmune: "Autoimmune",
+      aging: "Healthy aging",
+      infectious: "Infectious",
+      oncology: "Oncology-adjacent",
+      transplantationTherapy: "Transplantation therapy",
     },
     blocks: {
       missionTitle: "Mission",
@@ -123,6 +165,13 @@ const dict = {
       title2: "Регенерация тимуса & иммунорегулятор",
       paragraph:
         "решение, соединяющее веру, науку и современные биотехнологии — открывая новую эпоху в иммунологии и медицине.",
+    },
+    segments: {
+      autoimmune: "Аутоиммунные",
+      aging: "Здоровое старение",
+      infectious: "Инфекционные",
+      oncology: "Смежные с онкологией",
+      transplantationTherapy: "Трансплантационная терапия",
     },
     blocks: {
       missionTitle: "Миссия",
@@ -185,6 +234,13 @@ const dict = {
       paragraph:
         "حلٌ يجمع الإيمان والعِلم والتقنيات الحيوية الحديثة، لفتح عصرٍ جديد في المناعة والطب.",
     },
+    segments: {
+      autoimmune: "المناعية الذاتية",
+      aging: "الشيخوخة الصحية",
+      infectious: "الأمراض المعدية",
+      oncology: "المجاورة للأورام",
+      transplantationTherapy: "العلاج بالزرع",
+    },
     blocks: {
       missionTitle: "الرسالة",
       missionBullets: [
@@ -232,6 +288,7 @@ const dict = {
   },
 };
 
+/* ===================== Mail builders + files ===================== */
 function buildContactMailto(lang: Lang) {
   const subject = {
     EN: "Collaboration request with Regulina-T",
@@ -400,6 +457,37 @@ function Feature({ icon, title, desc }: { icon: React.ReactNode; title: string; 
   );
 }
 
+/* ===================== Market Pie (Infographic) ===================== */
+type SegKey = "autoimmune" | "aging" | "infectious" | "oncology" | "transplant";
+const segmentPalette: Record<SegKey, string> = {
+  autoimmune: "#1E88E5", // blue
+  aging: "#0CA678",      // green
+  infectious: "#F59E0B", // orange/yellow
+  oncology: "#C62828",   // red/burgundy
+  transplant: "#7C3AED", // violet
+};
+// Временное равенство долей: по 20%
+const marketValues: Record<SegKey, number> = {
+  autoimmune: 20,
+  aging: 20,
+  infectious: 20,
+  oncology: 20,
+  transplant: 20,
+};
+function lighten(hex: string, amt = 28) {
+  const h = hex.replace("#", "");
+  const num = parseInt(h, 16);
+  let r = (num >> 16) + amt;
+  let g = ((num >> 8) & 0xff) + amt;
+  let b = (num & 0xff) + amt;
+  r = Math.max(0, Math.min(255, r));
+  g = Math.max(0, Math.min(255, g));
+  b = Math.max(0, Math.min(255, b));
+  return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b
+    .toString(16)
+    .padStart(2, "0")}`;
+}
+
 /* ===================== Language Switcher (Dropdown) ===================== */
 function LanguageSwitcher({
   lang,
@@ -471,7 +559,7 @@ function LanguageSwitcher({
           ref={listRef}
           id={listId}
           role="listbox"
-          className={`absolute ${isRTL ? "left-0" : "right-0"} mt-2 min-w-[140px]
+          className={`absolute ${isRTL ? "left-0" : "right-0"} mt-2 min-w-[160px]
                       rounded-xl border border-slate-200 bg-white p-1 shadow-2xl ring-1 ring-black/5`}
           style={{ transformOrigin: isRTL ? "top left" : "top right" }}
         >
@@ -489,7 +577,6 @@ function LanguageSwitcher({
               }}
             >
               <span className="font-semibold">{opt}</span>
-              {/* отметка активного (здесь всегда другой язык, поэтому чек скрыт) */}
               <Check size={14} className="opacity-0" aria-hidden="true" />
             </button>
           ))}
@@ -497,27 +584,6 @@ function LanguageSwitcher({
       )}
     </div>
   );
-}
-
-/* ===================== Market Pie (Infographic) ===================== */
-const marketPie = [
-  { key: "autoimmune", name: "Autoimmune", value: 40, color: "#1E88E5" },
-  { key: "aging", name: "Healthy aging", value: 15, color: "#0CA678" },
-  { key: "infectious", name: "Infectious", value: 20, color: "#F59E0B" },
-  { key: "oncology", name: "Oncology-adjacent", value: 25, color: "#C62828" },
-] as const;
-function lighten(hex: string, amt = 28) {
-  const h = hex.replace("#", "");
-  const num = parseInt(h, 16);
-  let r = (num >> 16) + amt;
-  let g = ((num >> 8) & 0xff) + amt;
-  let b = (num & 0xff) + amt;
-  r = Math.max(0, Math.min(255, r));
-  g = Math.max(0, Math.min(255, g));
-  b = Math.max(0, Math.min(255, b));
-  return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b
-    .toString(16)
-    .padStart(2, "0")}`;
 }
 
 /* ===================== Page ===================== */
@@ -653,11 +719,11 @@ export default function Page() {
 
       {/* ===================== Mission ===================== */}
       <section className="border-y border-slate-200">
-        <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-4 px-4 py-10 md:grid-cols-2 md:gap-6">
+        <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-4 px-4 pt-8 md:pt-10 pb-4 md:pb-5 md:grid-cols-2 md:gap-6">
           <Card className="p-6 md:p-8">
-            <h3 className="text-xl font-semibold text-[#111827]">{d.blocks.missionTitle}</h3>
+            <SectionTitle as="h3" className="mb-4">{dict[lang].blocks.missionTitle}</SectionTitle>
             <ul className={`${isRTL ? "text-right" : ""} mt-3 space-y-2`}>
-              {d.blocks.missionBullets.map((b, i) => (
+              {dict[lang].blocks.missionBullets.map((b, i) => (
                 <li key={i} className="flex items-start gap-2 text-slate-700">
                   <CheckCircle2 className="mt-0.5 shrink-0 text-emerald-600" size={18} />
                   <span>{b}</span>
@@ -667,10 +733,10 @@ export default function Page() {
           </Card>
           <div className="grid grid-cols-2 gap-4 md:gap-6">
             <Card className="p-6 md:p-8">
-              <div className="text-emerald-700">{d.blocks.marketStats.patients}</div>
+              <div className="text-emerald-700">{dict[lang].blocks.marketStats.patients}</div>
             </Card>
             <Card className="p-6 md:p-8">
-              <div className="text-emerald-700">{d.blocks.marketStats.size}</div>
+              <div className="text-emerald-700">{dict[lang].blocks.marketStats.size}</div>
             </Card>
           </div>
         </div>
@@ -678,17 +744,17 @@ export default function Page() {
 
       {/* ===================== Science ===================== */}
       <section id="science" className="scroll-mt-20">
-        <div className="mx-auto max-w-[1200px] px-4 py-16">
+        <div className="mx-auto max-w-[1200px] px-4 pt-8 md:pt-10 pb-4 md:pb-5">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <Card className="p-6 md:p-8">
-              <h2 className="text-2xl font-semibold text-[#111827]">{d.blocks.scienceTitle}</h2>
-              {d.blocks.scienceMain.map((p, i) => (
+              <SectionTitle as="h2" className="mb-4">{dict[lang].blocks.scienceTitle}</SectionTitle>
+              {dict[lang].blocks.scienceMain.map((p, i) => (
                 <p key={i} className="text-[#111827]">
                   {p}
                 </p>
               ))}
               <ul className={`mt-4 grid list-none grid-cols-1 gap-2 p-0 sm:grid-cols-2 ${isRTL ? "text-right" : ""}`}>
-                {d.blocks.scienceList.map((li, i) => (
+                {dict[lang].blocks.scienceList.map((li, i) => (
                   <li key={i} className="flex items-start gap-2 text-slate-700">
                     <Shield className="mt-0.5 shrink-0 text-emerald-600" size={18} />
                     <span>{li}</span>
@@ -696,55 +762,120 @@ export default function Page() {
                 ))}
               </ul>
               <div className="mt-5 rounded-xl bg-emerald-50 p-4 text-emerald-900 ring-1 ring-emerald-200">
-                <div className="text-sm font-semibold">{d.blocks.dosingTitle}</div>
+                <div className="text-sm font-semibold">{dict[lang].blocks.dosingTitle}</div>
                 <ul className={`mt-2 list-disc space-y-1 pl-5 ${isRTL ? "pl-0 pr-5" : ""}`}>
-                  {d.blocks.dosingBullets.map((x, i) => (
+                  {dict[lang].blocks.dosingBullets.map((x, i) => (
                     <li key={i}>{x}</li>
                   ))}
                 </ul>
               </div>
             </Card>
 
+            {/* Инфографика — 5 сегментов */}
             <Card className="p-6 md:p-8">
-              <h3 className="mb-4 text-sm font-semibold text-slate-600">Infographic — addressable segments</h3>
-              <div className="h-64 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <defs>
-                      {marketPie.map((s) => (
-                        <linearGradient id={`grad-${s.key}`} key={s.key} x1="0" y1="0" x2="1" y2="1">
-                          <stop offset="0%" stopColor={lighten(s.color, 28)} />
-                          <stop offset="100%" stopColor={s.color} />
-                        </linearGradient>
-                      ))}
-                    </defs>
-                    <Pie
-                      data={marketPie.map((s) => ({ ...s, fill: `url(#grad-${s.key})` }))}
-                      dataKey="value"
-                      nameKey="name"
-                      outerRadius={90}
-                      innerRadius={40}
-                      stroke="rgba(15,23,42,0.12)"
-                      strokeWidth={1}
-                      isAnimationActive
-                    />
-                    <Tooltip />
-                    <Legend
-                      content={() => (
-                        <div className="mx-auto mt-2 flex max-w-sm flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs">
-                          {marketPie.map((s) => (
-                            <div key={s.key} className="flex items-center gap-2">
-                              <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: s.color }} />
-                              <span className="text-[#111827]">{s.name}</span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-              <p className="mt-3 text-xs text-slate-500">Illustrative split. Final segmentation per research.</p>
+              <SectionTitle as="h3" className="mb-4">Infographic — addressable segments</SectionTitle>
+
+              <figure role="group" aria-label="Market segments donut chart" className={`${isRTL ? "text-right" : ""}`}>
+                <div className="h-64 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <defs>
+                        {( ["autoimmune","aging","infectious","oncology","transplant"] as SegKey[] ).map((k) => (
+                          <linearGradient id={`grad-${k}`} key={k} x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stopColor={lighten(segmentPalette[k], 28)} />
+                            <stop offset="100%" stopColor={segmentPalette[k]} />
+                          </linearGradient>
+                        ))}
+                      </defs>
+
+                      <Pie
+                        data={(["autoimmune","aging","infectious","oncology","transplant"] as SegKey[]).map((k) => ({
+                          key: k,
+                          name:
+                            k === "transplant"
+                              ? dict[lang].segments.transplantationTherapy
+                              : k === "autoimmune"
+                              ? dict[lang].segments.autoimmune
+                              : k === "aging"
+                              ? dict[lang].segments.aging
+                              : k === "infectious"
+                              ? dict[lang].segments.infectious
+                              : dict[lang].segments.oncology,
+                          value: marketValues[k],
+                          fill: `url(#grad-${k})`,
+                        }))}
+                        dataKey="value"
+                        nameKey="name"
+                        outerRadius={90}
+                        innerRadius={40}
+                        stroke="rgba(15,23,42,0.12)"
+                        strokeWidth={1}
+                        isAnimationActive
+                      />
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+
+                {/* Легенда: 1–2 колонки, кликабельные зоны ≥32px */}
+                <div
+                  className={`mx-auto mt-3 grid max-w-[520px] grid-cols-1 gap-x-4 gap-y-1 text-xs sm:grid-cols-2 ${
+                    isRTL ? "text-right" : ""
+                  }`}
+                  aria-label="Legend"
+                >
+                  {( ["autoimmune","aging","infectious","oncology","transplant"] as SegKey[] ).map((k) => {
+                    const label =
+                      k === "transplant"
+                        ? dict[lang].segments.transplantationTherapy
+                        : k === "autoimmune"
+                        ? dict[lang].segments.autoimmune
+                        : k === "aging"
+                        ? dict[lang].segments.aging
+                        : k === "infectious"
+                        ? dict[lang].segments.infectious
+                        : dict[lang].segments.oncology;
+                    return (
+                      <button
+                        key={k}
+                        type="button"
+                        className="group flex min-h-8 items-center gap-2 rounded-md px-2 py-1 hover:bg-white/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                        aria-label={`${label} — ${marketValues[k]}%`}
+                      >
+                        <span
+                          className="inline-flex h-2.5 w-2.5 shrink-0 rounded-full"
+                          style={{ background: segmentPalette[k] }}
+                          aria-hidden="true"
+                        />
+                        <span className="text-[#111827]">{label}</span>
+                        <span className="ml-auto text-slate-500">{marketValues[k]}%</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <figcaption className="sr-only">
+                  {(["autoimmune","aging","infectious","oncology","transplant"] as SegKey[])
+                    .map((k) => {
+                      const label =
+                        k === "transplant"
+                          ? dict[lang].segments.transplantationTherapy
+                          : k === "autoimmune"
+                          ? dict[lang].segments.autoimmune
+                          : k === "aging"
+                          ? dict[lang].segments.aging
+                          : k === "infectious"
+                          ? dict[lang].segments.infectious
+                          : dict[lang].segments.oncology;
+                      return `${label}: ${marketValues[k]}%`;
+                    })
+                    .join("; ")}
+                </figcaption>
+              </figure>
+
+              <p className="mt-3 text-xs text-slate-500">
+                Illustrative split. Final segmentation to be refined with market research.
+              </p>
             </Card>
           </div>
         </div>
@@ -752,13 +883,13 @@ export default function Page() {
 
       {/* ===================== Platform ===================== */}
       <section id="platform" className="scroll-mt-20">
-        <div className="mx-auto max-w-[1200px] px-4 py-16">
+        <div className="mx-auto max-w-[1200px] px-4 pt-8 md:pt-10 pb-4 md:pb-5">
           <Card className="p-6 md:p-8">
+            <SectionTitle as="h2" className="mb-4">{dict[lang].blocks.platformTitle}</SectionTitle>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
-                <h2 className="text-2xl font-semibold text-[#111827]">{d.blocks.platformTitle}</h2>
                 <ul className={`mt-4 space-y-2 ${isRTL ? "text-right" : ""}`}>
-                  {d.blocks.platformBullets.map((x, i) => (
+                  {dict[lang].blocks.platformBullets.map((x, i) => (
                     <li key={i} className="flex items-start gap-2 text-slate-700">
                       <FlaskConical className="mt-0.5 shrink-0 text-emerald-600" size={18} />
                       <span>{x}</span>
@@ -780,15 +911,15 @@ export default function Page() {
 
       {/* ===================== Partnership ===================== */}
       <section id="partnership" className="scroll-mt-20">
-        <div className="mx-auto max-w-[1200px] px-4 py-16">
+        <div className="mx-auto max-w-[1200px] px-4 pt-8 md:pt-10 pb-4 md:pb-5">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
             <Card className="p-6 md:p-8 md:col-span-1">
-              <h2 className="text-2xl font-semibold text-[#111827]">{d.blocks.partnerTitle}</h2>
-              <p className="mt-3 text-slate-700">{d.blocks.partnerLead}</p>
+              <SectionTitle as="h2" className="mb-4">{dict[lang].blocks.partnerTitle}</SectionTitle>
+              <p className="mt-3 text-slate-700">{dict[lang].blocks.partnerLead}</p>
             </Card>
 
             <div className="md:col-span-2 grid grid-cols-1 gap-4 md:gap-6 sm:grid-cols-2">
-              {d.blocks.partnerBullets.map((x, i) => (
+              {dict[lang].blocks.partnerBullets.map((x, i) => (
                 <Card key={i} className="p-4" clickable>
                   <div className="flex items-start gap-3">
                     <div className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200">
@@ -809,7 +940,7 @@ export default function Page() {
                 className="inline-flex items-center gap-2 rounded-[14px] px-4 py-2 text-sm font-semibold text-white"
                 style={{ background: "#16A34A" }}
               >
-                <Users2 size={16} /> {d.blocks.ctas.contact}
+                <Users2 size={16} /> {dict[lang].blocks.ctas.contact}
               </a>
               <a
                 href={getDossierPath(lang)}
@@ -817,7 +948,7 @@ export default function Page() {
                 className="inline-flex items-center gap-2 rounded-[14px] border px-4 py-2 text-sm font-semibold text-slate-900"
                 style={{ background: "#FFFFFF", borderColor: "#E2E8F0" }}
               >
-                <FileDown size={16} /> {d.blocks.ctas.dossier}
+                <FileDown size={16} /> {dict[lang].blocks.ctas.dossier}
               </a>
             </div>
           </div>
@@ -826,10 +957,10 @@ export default function Page() {
 
       {/* ===================== Contacts ===================== */}
       <section id="contacts" className="scroll-mt-20">
-        <div className="mx-auto max-w-[1200px] px-4 pb-28 pt-16">
+        <div className="mx-auto max-w-[1200px] px-4 pt-8 md:pt-10 pb-28 md:pb-20">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
             <Card className="p-6 md:p-8">
-              <h2 className="text-2xl font-semibold text-[#111827]">{d.blocks.contactsTitle}</h2>
+              <SectionTitle as="h2" className="mb-4">{dict[lang].blocks.contactsTitle}</SectionTitle>
               <p className="mt-3 text-slate-700">
                 Email:{" "}
                 <a className="font-semibold text-emerald-700 hover:underline" href={`mailto:${CONTACT_EMAIL}`}>
@@ -851,11 +982,11 @@ export default function Page() {
                   }}
                   className="space-y-3"
                 >
-                  <Input label={d.blocks.form.name} />
-                  <Input label={d.blocks.form.email} type="email" />
-                  <Input label={d.blocks.form.org} />
+                  <Input label={dict[lang].blocks.form.name} />
+                  <Input label={dict[lang].blocks.form.email} type="email" />
+                  <Input label={dict[lang].blocks.form.org} />
                   <label className="block text-sm">
-                    <span className="mb-1 block text-slate-700">{d.blocks.form.msg}</span>
+                    <span className="mb-1 block text-slate-700">{dict[lang].blocks.form.msg}</span>
                     <textarea
                       rows={5}
                       className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none ring-emerald-500/0 transition focus:ring-emerald-500/50"
@@ -866,7 +997,7 @@ export default function Page() {
                     className="inline-flex items-center gap-2 rounded-[14px] px-4 py-2 text-sm font-semibold text-white"
                     style={{ background: "#16A34A" }}
                   >
-                    <Mail size={16} /> {d.blocks.form.send}
+                    <Mail size={16} /> {dict[lang].blocks.form.send}
                   </button>
                 </form>
               </div>
@@ -874,7 +1005,7 @@ export default function Page() {
 
             <Card className="p-6 md:p-8">
               <div className="rounded-xl bg-emerald-50 p-4 text-emerald-900 ring-1 ring-emerald-200">
-                {d.blocks.positioningCard}
+                {dict[lang].blocks.positioningCard}
               </div>
             </Card>
           </div>
@@ -899,14 +1030,14 @@ export default function Page() {
                 className="rounded-[14px] px-3 py-1.5 text-xs font-semibold text-white"
                 style={{ background: "#16A34A" }}
               >
-                {d.blocks.ctas.contact}
+                {dict[lang].blocks.ctas.contact}
               </a>
               <a
                 href={buildLicenseeMailto(lang)}
                 className="rounded-[14px] border px-3 py-1.5 text-xs font-semibold text-slate-900"
                 style={{ background: "#FFFFFF", borderColor: "#E2E8F0" }}
               >
-                {d.blocks.ctas.licensee}
+                {dict[lang].blocks.ctas.licensee}
               </a>
               <a
                 href={getDossierPath(lang)}
@@ -914,7 +1045,7 @@ export default function Page() {
                 className="rounded-[14px] border px-3 py-1.5 text-xs font-semibold text-slate-900"
                 style={{ background: "#FFFFFF", borderColor: "#E2E8F0" }}
               >
-                {d.blocks.ctas.dossier}
+                {dict[lang].blocks.ctas.dossier}
               </a>
             </div>
           </div>
@@ -924,7 +1055,7 @@ export default function Page() {
       {/* ===================== Footer ===================== */}
       <footer className="border-t border-slate-200" style={{ background: "#FFFFFF" }}>
         <div className="mx-auto flex max-w-[1200px] items-center justify-between px-4 py-6 text-xs text-slate-500">
-          <div>{d.blocks.footer}</div>
+          <div>{dict[lang].blocks.footer}</div>
           <div>EN / RU / AR</div>
         </div>
       </footer>
