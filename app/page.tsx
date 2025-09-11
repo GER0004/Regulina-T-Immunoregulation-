@@ -453,6 +453,55 @@ function LanguageSwitcher({ lang, onChange, isRTL }:{ lang:Lang; onChange:(l:Lan
 export default function Page(){
   const [lang, setLang] = useState<Lang>(DEFAULT_LANG);
   const [ultraNarrow, setUltraNarrow] = useState(false);
+const titleRef = useRef<HTMLSpanElement|null>(null);
+const pillRef = useRef<HTMLSpanElement|null>(null);
+
+useEffect(() => {
+  const apply = () => {
+    if (!titleRef.current || !pillRef.current) return;
+    const w = Math.ceil(titleRef.current.getBoundingClientRect().width);
+    pillRef.current.style.width = `${w}px`; // бейдж = ширина заголовка
+  };
+
+  apply();                         // сразу после маунта
+  document.fonts?.ready.then(apply); // после загрузки шрифтов — ширина считается точно
+
+  let ro: ResizeObserver | null = null;
+  if (typeof ResizeObserver !== "undefined" && titleRef.current) {
+    ro = new ResizeObserver(apply);
+    ro.observe(titleRef.current);
+  }
+
+  window.addEventListener("resize", apply);
+useEffect(() => {
+  const apply = () => {
+    if (!titleRef.current || !pillRef.current) return;
+    const w = Math.ceil(titleRef.current.getBoundingClientRect().width);
+    pillRef.current.style.width = `${w}px`; // бейдж = ширина заголовка
+  };
+
+  apply();                          // сразу после маунта
+  document.fonts?.ready?.then(apply); // после загрузки шрифтов
+
+  let ro: ResizeObserver | null = null;
+  if (typeof ResizeObserver !== "undefined" && titleRef.current) {
+    ro = new ResizeObserver(apply);
+    ro.observe(titleRef.current);
+  }
+
+  window.addEventListener("resize", apply);
+  return () => {
+    window.removeEventListener("resize", apply);
+    ro?.disconnect?.();
+  };
+}, [lang]);
+
+  return () => {
+    window.removeEventListener("resize", apply);
+    ro?.disconnect?.();
+  };
+}, [lang]);
+
 
   useEffect(()=>{
     const fromCookie = getCookie("NEXT_LOCALE") as Lang | null;
@@ -483,12 +532,28 @@ export default function Page(){
           <div className={`flex items-start gap-3 min-w-0 ${isRTL ? "flex-row-reverse" : ""}`}>
             <FlaskIcon size={28} className="text-[#0EA5E9] dark:text-[#14B8A6] mt-[1px] h-[24px] w-[24px] md:h-[28px] md:w-[28px]" />
             <div className={`flex flex-col leading-none ${isRTL ? "items-end" : "items-start"}`}>
-              <span className="text-[20px] md:text-[24px] font-extrabold text-[#0B1220] whitespace-nowrap [word-break:keep-all] [hyphens:none]">Regulina-T™</span>
-              <span className="mt-1 inline-flex items-center rounded-full border px-[6px] py-[1px]
-                               text-[10px] md:text-[11px] leading-[12px] font-semibold text-[#047857] whitespace-nowrap"
-                    style={{ background:"#E6FDF5", borderColor: brand.pillBorder, height:"16px" }} aria-hidden="true">
-                RGN-T1™ IMMUNOREGULATOR
-              </span>
+              <span
+  ref={titleRef}
+  className="text-[20px] md:text-[24px] font-extrabold text-[#0B1220] whitespace-nowrap [word-break:keep-all] [hyphens:none]"
+>
+  Regulina-T™
+</span>
+
+             <span
+  ref={pillRef}
+  className="mt-1 inline-flex items-center justify-center rounded-full border px-[8px] py-[2px]
+             text-[10px] md:text-[11px] leading-[12px] font-semibold text-[#047857] whitespace-nowrap"
+  style={{
+    background: "#E6FDF5",
+    borderColor: brand.pillBorder,
+    height: "16px",
+    boxSizing: "border-box", // ширина включает padding и border
+  }}
+  aria-hidden="true"
+>
+  RGN-T1™ IMMUNOREGULATOR
+</span>
+
             </div>
           </div>
 
