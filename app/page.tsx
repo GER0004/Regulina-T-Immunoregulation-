@@ -475,26 +475,42 @@ useEffect(() => {
   window.addEventListener("resize", apply);
 useEffect(() => {
   const apply = () => {
-    if (!titleRef.current || !pillRef.current) return;
-    const w = Math.ceil(titleRef.current.getBoundingClientRect().width);
-    pillRef.current.style.width = `${w}px`; // бейдж = ширина заголовка
+    try {
+      const t = titleRef.current;
+      const p = pillRef.current;
+      if (!t || !p) return;
+      const w = Math.ceil(t.getBoundingClientRect().width);
+      p.style.width = `${w}px`; // бейдж = ширина заголовка
+    } catch {}
   };
 
-  apply();                          // сразу после маунта
-  document.fonts?.ready?.then(apply); // после загрузки шрифтов
+  // 1) сразу после маунта/рендера
+  const raf = requestAnimationFrame(apply);
 
-  let ro: ResizeObserver | null = null;
-  if (typeof ResizeObserver !== "undefined" && titleRef.current) {
-    ro = new ResizeObserver(apply);
+  // 2) после загрузки шрифтов (если браузер это поддерживает)
+  const fontsAny: any = (document as any).fonts;
+  const ready = fontsAny?.ready;
+  if (ready && typeof ready.then === "function") {
+    ready.then(apply).catch(() => {});
+  }
+
+  // 3) отслеживаем изменения ширины заголовка
+  let ro: any = null;
+  if (typeof (window as any).ResizeObserver !== "undefined" && titleRef.current) {
+    ro = new (window as any).ResizeObserver(apply);
     ro.observe(titleRef.current);
   }
 
+  // 4) ресайз окна
   window.addEventListener("resize", apply);
+
   return () => {
+    cancelAnimationFrame(raf);
     window.removeEventListener("resize", apply);
     ro?.disconnect?.();
   };
 }, [lang]);
+
 
   return () => {
     window.removeEventListener("resize", apply);
