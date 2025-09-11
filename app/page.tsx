@@ -532,32 +532,29 @@ export default function Page() {
      {/* Header with brand name and compact sub-badge under it */}
 <header className="sticky top-0 z-40 w-full bg-[#F9FAFB] border-b border-slate-200">
   <div className="mx-auto max-w-[1200px] w-full px-4 py-2 flex items-center justify-between gap-4">
-    {/* ЛЕВО: лого + (бренд и под ним компактный бейдж) */}
-    <div className={`flex items-start gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
-      {/* Лого 26–28px, без рамок/теней */}
-      {/* Если используете файл-логотип: <img src="/assets/RegulinaT_logo_roundel.svg" alt="Regulina-T" className="h-[26px] md:h-[28px] w-auto mt-[2px]" /> */}
-      <BrandLogo className="h-[26px] md:h-[28px] w-auto mt-[2px]" />
+    {/* ЛЕВО: inline-SVG колба + (бренд + ультра-компактный бейдж под ним) */}
+    <div className={`flex items-start gap-3 min-w-0 ${isRTL ? "flex-row-reverse" : ""}`}>
+      <FlaskIcon size={28} className="text-slate-900 dark:text-teal-400 mt-[2px]" />
 
       <div className={`flex flex-col leading-none ${isRTL ? "items-end" : "items-start"}`}>
-        {/* Название — как сейчас (крупнее бейджа) */}
         <span className="text-[20px] md:text-[24px] font-extrabold text-[#0B1220]">
           Regulina-T™
         </span>
 
-        {/* Ультра-компактный бейдж: ~10–12px высота, 10–11px шрифт, 1px/6px паддинги, ВСЕГДА одна строка, без обрезаний */}
+        {/* Бейдж — без анимации, одна строка, компактный */}
         <span
-          className="mt-1 inline-flex items-center rounded-full border px-1.5 py-px
-                     text-[10px] md:text-[11px] leading-[10px] md:leading-[11px]
+          className="mt-1 inline-flex items-center rounded-full border px-[6px] py-[1px]
+                     text-[10px] md:text-[11px] leading-[11px]
                      font-semibold text-[#047857] whitespace-nowrap"
-          style={{ background: "#F0FDF4", borderColor: "#BBF7D0" }}  // фон чуть светлее, чем раньше
+          style={{ background: "#F0FDF4", borderColor: "#BBF7D0", height: "12px" }}
         >
           RGN-T1™ IMMUNOREGULATOR
         </span>
       </div>
     </div>
 
-    {/* ПРАВО: языковой свитчер (с зазором ≥16px от бренда) */}
-    <div className="flex items-center gap-4 shrink-0">
+    {/* ПРАВО: языковой свитчер */}
+    <div className="flex items-center gap-2 shrink-0">
       {(["EN","RU","AR"] as const).map((l) => {
         const active = lang === l;
         return (
