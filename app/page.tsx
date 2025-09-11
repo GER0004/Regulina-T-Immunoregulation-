@@ -1,45 +1,58 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { PieChart, Pie, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Mail,
   FileDown,
   ArrowRight,
   CheckCircle2,
-  Globe2,
   FlaskConical,
   Users2,
   Shield,
+  Check,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { PieChart, Pie, ResponsiveContainer, Tooltip, Legend } from "recharts";
 
-/* =========================================================
-   Brand palette
-========================================================= */
+/* ===================== Brand / Theme ===================== */
 const brand = {
-  blue: "#0B1E3B",
-  emerald: "#0CA678",
-  sky: "#0EA5E9",
   ink: "#0B1220",
-  headerBg: "#F8FAFC", // bg-slate-50
-  pillBg: "#BBF7D0", // emerald-100
-  pillText: "#047857", // emerald-700
+  headerBg: "#F9FAFB",
   pillBorder: "#BBF7D0",
   cardBorder: "#D1FAE5",
   cardBg: "#ECFDF5",
   cardShadow: "0 2px 6px rgba(0,0,0,0.05)",
 };
-
-const HEADER_BADGE = "Regulina-T™ | RGN-T1™ IMMUNOREGULATOR";
 const CONTACT_EMAIL = "official.regulina.t@gmail.com";
-
 type Lang = "EN" | "RU" | "AR";
 const DEFAULT_LANG: Lang = "EN";
 
-/* =========================================================
-   i18n
-========================================================= */
+/* ===================== Inline SVG Logo (Flask) ===================== */
+function FlaskIcon({ size = 28, className = "" }: { size?: number; className?: string }) {
+  const sw = size >= 28 ? 1.8 : size <= 24 ? 1.6 : 1.7;
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path d="M9 3h6M11 3v4M13 3v4" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" />
+      <path
+        d="M8 7L6.2 10.6c-1.1 2.2.3 4.9 2.7 6a15.5 15.5 0 0 0 6.2 0c2.4-1.1 3.8-3.8 2.7-6L16 7H8Z"
+        stroke="currentColor"
+        strokeWidth={sw}
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <path d="M7.6 13.2c2.2-1.3 6.6-1.3 8.8 0" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/* ===================== i18n ===================== */
 const dict = {
   EN: {
     langLabel: "EN",
@@ -49,7 +62,6 @@ const dict = {
       pretitle: "A UNIQUE BREAKTHROUGH UNITING SCIENCE AND FAITH",
       title1: "Regulina-T™",
       title2: "Thymus regeneration & immunoregulator",
-      badge: HEADER_BADGE,
       paragraph:
         "a solution uniting faith, science, and modern biotech — opening a new era in immunology and medicine.",
     },
@@ -87,29 +99,17 @@ const dict = {
       ],
       marketStats: { patients: ">2.5B patients", size: ">$500B annual market" },
       partnerTitle: "Partnership",
-      partnerLead:
-        "We seek strategic partnerships with mega-pharma and sovereign programs:",
+      partnerLead: "We seek strategic partnerships with mega-pharma and sovereign programs:",
       partnerBullets: [
         "Licensing / co-development / JV",
         "Clinical programs (Ph I–III)",
         "Manufacturing localization (GMP)",
         "Global market access with public health impact",
       ],
-      ctas: {
-        contact: "Contact",
-        licensee: "Licensee",
-        dossier: "Download dossier",
-      },
+      ctas: { contact: "Contact", licensee: "Licensee", dossier: "Download dossier" },
       contactsTitle: "Contacts",
-      form: {
-        name: "Your name",
-        email: "Business email",
-        org: "Organization",
-        msg: "Message",
-        send: "Send",
-      },
-      positioningCard:
-        "Regulina-T™ is a God-given key: the unity of faith, science, and biotechnology.",
+      form: { name: "Your name", email: "Business email", org: "Organization", msg: "Message", send: "Send" },
+      positioningCard: "Regulina-T™ is a God-given key: the unity of faith, science, and biotechnology.",
       footer: "© Regulina-T™ Thymus Immunoregulator Platform",
     },
   },
@@ -121,7 +121,6 @@ const dict = {
       pretitle: "УНИКАЛЬНЫЙ ПРОРЫВ, ОБЪЕДИНЯЮЩИЙ НАУКУ И ВЕРУ",
       title1: "Regulina-T™",
       title2: "Регенерация тимуса & иммунорегулятор",
-      badge: HEADER_BADGE,
       paragraph:
         "решение, соединяющее веру, науку и современные биотехнологии — открывая новую эпоху в иммунологии и медицине.",
     },
@@ -167,19 +166,9 @@ const dict = {
         "Локализация производства (GMP)",
         "Глобальный доступ на рынок с общественным эффектом",
       ],
-      ctas: {
-        contact: "Связаться",
-        licensee: "Лицензиат",
-        dossier: "Скачать досье",
-      },
+      ctas: { contact: "Связаться", licensee: "Лицензиат", dossier: "Скачать досье" },
       contactsTitle: "Контакты",
-      form: {
-        name: "Ваше имя",
-        email: "Рабочая почта",
-        org: "Организация",
-        msg: "Сообщение",
-        send: "Отправить",
-      },
+      form: { name: "Ваше имя", email: "Рабочая почта", org: "Организация", msg: "Сообщение", send: "Отправить" },
       positioningCard:
         "Regulina-T™ — ключ, дарованный Богом: единство веры, науки и биотехнологий.",
       footer: "© Regulina-T™ Платформа иммунорегуляции тимуса",
@@ -193,7 +182,6 @@ const dict = {
       pretitle: "اختراق فريد يجمع العِلم والإيمان",
       title1: "Regulina-T™",
       title2: "تجديد الغدة الزعترية ومنظِّم مناعي",
-      badge: HEADER_BADGE,
       paragraph:
         "حلٌ يجمع الإيمان والعِلم والتقنيات الحيوية الحديثة، لفتح عصرٍ جديد في المناعة والطب.",
     },
@@ -218,21 +206,17 @@ const dict = {
         "اتّزان مناعي وطول عمر صحي",
       ],
       dosingTitle: "مبادئ الجرعات",
-      dosingBullets: [
-        "الجرعة الميكروية المفردة أقل بأكثر من 1000× من المستوى الفيزيولوجي → أمانٌ مُطلق.",
-        "نظام معتاد: 9 جرعات/سنة (~1.8 ملغ).",
-      ],
+      dosingBullets: ["جرعة ميكروية مفردة أقل بأكثر من 1000× → أمانٌ مُطلق.", "نظام معتاد: 9 جرعات/سنة (~1.8 ملغ)."],
       platformTitle: "منصّة Regulina-T™",
       platformBullets: [
         "تجديد موجّه للزُعْتُر وتحديث مخزون الخلايا T.",
-        "عمليات وفق GMP/GLP، قابلة للتوسّع في المفاعلات الحيوية.",
+        "عمليات وفق GMP/GLP، قابلة للتوسّع.",
         "قابلة للتحلّل الحيوي وبروفايل أمان مُواتٍ.",
         "توافق مع العلاجات المركّبة ومعايير الرعاية.",
       ],
       marketStats: { patients: ">2.5 مليار مريض", size: ">500 مليار$ سنويًا" },
       partnerTitle: "الشراكة",
-      partnerLead:
-        "نبحث عن شراكات استراتيجية مع شركات الأدوية العملاقة والبرامج السيادية:",
+      partnerLead: "نبحث عن شراكات استراتيجية مع شركات الأدوية العملاقة والبرامج السيادية:",
       partnerBullets: [
         "ترخيص / تطوير مشترك / مشاريع مشتركة",
         "برامج سريرية (المرحلة الأولى–الثالثة)",
@@ -241,23 +225,13 @@ const dict = {
       ],
       ctas: { contact: "تواصل", licensee: "الترخيص", dossier: "تنزيل الملف" },
       contactsTitle: "التواصل",
-      form: {
-        name: "الاسم",
-        email: "البريد المهني",
-        org: "المؤسسة",
-        msg: "الرسالة",
-        send: "إرسال",
-      },
-      positioningCard:
-        "ريغولينا-تي™ هو مفتاح منحه الله: وحدة الإيمان والعلم والتقنيات الحيوية.",
+      form: { name: "الاسم", email: "البريد المهني", org: "المؤسسة", msg: "الرسالة", send: "إرسال" },
+      positioningCard: "ريغولينا-تي™ هو مفتاح منحه الله: وحدة الإيمان والعلم والتقنيات الحيوية.",
       footer: "© منصة تنظيم مناعة الغدة الزعترية — Regulina-T™",
     },
   },
 };
 
-/* =========================================================
-   helpers
-========================================================= */
 function buildContactMailto(lang: Lang) {
   const subject = {
     EN: "Collaboration request with Regulina-T",
@@ -305,11 +279,8 @@ _______`,
 مع خالص التحية،
 _______`,
   }[lang];
-  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-    subject
-  )}&body=${encodeURIComponent(bodyText)}`;
+  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
 }
-
 function buildLicenseeMailto(lang: Lang) {
   const subject = {
     EN: "License application for Regulina-T",
@@ -357,76 +328,29 @@ ___`,
 مع خالص التحية،
 ___`,
   }[lang];
-  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-    subject
-  )}&body=${encodeURIComponent(bodyText)}`;
+  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
 }
-
 function getDossierPath(lang: Lang) {
-  const map = {
-    EN: "Regulina-T_License_(en).pdf",
-    RU: "Regulina-T_License_(ru).pdf",
-    AR: "Regulina-T_License_(ar).pdf",
-  } as const;
+  const map = { EN: "Regulina-T_License_(en).pdf", RU: "Regulina-T_License_(ru).pdf", AR: "Regulina-T_License_(ar).pdf" } as const;
   return `/files/${map[lang]}`;
 }
 
-const marketPie = [
-  { key: "autoimmune", name: "Autoimmune", value: 40, color: "#1E88E5" },
-  { key: "aging", name: "Healthy aging", value: 15, color: "#0CA678" },
-  { key: "infectious", name: "Infectious", value: 20, color: "#F59E0B" },
-  { key: "oncology", name: "Oncology-adjacent", value: 25, color: "#C62828" },
-] as const;
-
-function lighten(hex: string, amt = 28) {
-  const h = hex.replace("#", "");
-  const num = parseInt(h, 16);
-  let r = (num >> 16) + amt;
-  let g = ((num >> 8) & 0xff) + amt;
-  let b = (num & 0xff) + amt;
-  r = Math.max(0, Math.min(255, r));
-  g = Math.max(0, Math.min(255, g));
-  b = Math.max(0, Math.min(255, b));
-  return `#${r.toString(16).padStart(2, "0")}${g
-    .toString(16)
-    .padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+/* ===================== Utilities ===================== */
+function setCookie(name: string, value: string, days = 365) {
+  const d = new Date();
+  d.setTime(d.getTime() + days * 864e5);
+  document.cookie = `${name}=${encodeURIComponent(value)};expires=${d.toUTCString()};path=/;SameSite=Lax`;
 }
-
+function getCookie(name: string): string | null {
+  const m = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
+  return m ? decodeURIComponent(m[1]) : null;
+}
 function scrollToId(id: string) {
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-/* =========================================================
-   UI primitives
-========================================================= */
-function FlaskIcon({ size = 28, className = "" }: { size?: number; className?: string }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-    >
-      {/* горлышко */}
-      <path d="M9 3h6M11 3v4M13 3v4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      {/* корпус колбы */}
-      <path
-        d="M8 7L6.2 10.6c-1.1 2.2.3 4.9 2.7 6a15.5 15.5 0 0 0 6.2 0c2.4-1.1 3.8-3.8 2.7-6L16 7H8Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      {/* линия жидкости */}
-      <path d="M7.6 13.2c2.2-1.3 6.6-1.3 8.8 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
+/* ===================== UI Primitives ===================== */
 function Card({
   children,
   className = "",
@@ -439,25 +363,13 @@ function Card({
   return (
     <div
       className={`mb-6 rounded-2xl border ${clickable ? "transition-shadow" : ""} ${className}`}
-      style={{
-        borderColor: brand.cardBorder,
-        background: brand.cardBg,
-        boxShadow: brand.cardShadow,
-        color: "#111827",
-      }}
+      style={{ borderColor: brand.cardBorder, background: brand.cardBg, boxShadow: brand.cardShadow, color: "#111827" }}
     >
       {children}
     </div>
   );
 }
-
-function Input({
-  label,
-  type = "text",
-}: {
-  label: string;
-  type?: string;
-}) {
+function Input({ label, type = "text" }: { label: string; type?: string }) {
   return (
     <label className="block text-sm">
       <span className="mb-1 block text-slate-700">{label}</span>
@@ -468,26 +380,15 @@ function Input({
     </label>
   );
 }
-
-function Feature({
-  icon,
-  title,
-  desc,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  desc: string;
-}) {
+function Feature({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
     <div
       className="rounded-xl border p-4 shadow-sm"
       style={{
         borderColor: brand.cardBorder,
         background: "#FFFFFF",
-        backgroundImage:
-          "linear-gradient(180deg, rgba(2,132,199,0.02), rgba(2,132,199,0))",
-        boxShadow:
-          "0 2px 6px rgba(2,6,23,0.04), 0 12px 24px rgba(2,6,23,0.06)",
+        backgroundImage: "linear-gradient(180deg, rgba(2,132,199,0.02), rgba(2,132,199,0))",
+        boxShadow: "0 2px 6px rgba(2,6,23,0.04), 0 12px 24px rgba(2,6,23,0.06)",
       }}
     >
       <div className="mb-1 flex items-center gap-2 text-slate-900">
@@ -499,18 +400,147 @@ function Feature({
   );
 }
 
-/* =========================================================
-   Page
-========================================================= */
+/* ===================== Language Switcher (Dropdown) ===================== */
+function LanguageSwitcher({
+  lang,
+  onChange,
+  isRTL,
+}: {
+  lang: Lang;
+  onChange: (l: Lang) => void;
+  isRTL: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const options: Lang[] = useMemo(() => (["EN", "RU", "AR"] as Lang[]).filter((l) => l !== lang), [lang]);
+  const listId = "lang-listbox";
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      const t = e.target as Node;
+      if (!listRef.current?.contains(t) && !btnRef.current?.contains(t)) setOpen(false);
+    };
+    const onEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onEsc);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onEsc);
+    };
+  }, [open]);
+
+  function applyLocale(l: Lang) {
+    onChange(l);
+    try {
+      localStorage.setItem("NEXT_LOCALE", l);
+    } catch {}
+    setCookie("NEXT_LOCALE", l, 365);
+
+    // Если используете под-пути /en /ru /ar — мягко меняем URL
+    const path = window.location.pathname;
+    const m = path.match(/^\/(en|ru|ar)(\/.*)?$/i);
+    if (m) {
+      const rest = m[2] || "/";
+      const target = `/${l.toLowerCase()}${rest}`;
+      window.history.replaceState(null, "", target);
+    }
+    setOpen(false);
+  }
+
+  return (
+    <div className="relative">
+      <button
+        ref={btnRef}
+        type="button"
+        className="rounded-full px-3 py-1.5 text-xs font-semibold bg-emerald-500 text-white border border-transparent
+                   focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-500"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={listId}
+        onClick={() => setOpen((v) => !v)}
+      >
+        {lang}
+      </button>
+
+      {open && (
+        <div
+          ref={listRef}
+          id={listId}
+          role="listbox"
+          className={`absolute ${isRTL ? "left-0" : "right-0"} mt-2 min-w-[140px]
+                      rounded-xl border border-slate-200 bg-white p-1 shadow-2xl ring-1 ring-black/5`}
+          style={{ transformOrigin: isRTL ? "top left" : "top right" }}
+        >
+          {options.map((opt) => (
+            <button
+              key={opt}
+              role="option"
+              aria-selected={false}
+              className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-xs
+                         text-slate-800 hover:bg-slate-50 focus:outline-none
+                         focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-500"
+              onClick={() => applyLocale(opt)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") applyLocale(opt);
+              }}
+            >
+              <span className="font-semibold">{opt}</span>
+              {/* отметка активного (здесь всегда другой язык, поэтому чек скрыт) */}
+              <Check size={14} className="opacity-0" aria-hidden="true" />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ===================== Market Pie (Infographic) ===================== */
+const marketPie = [
+  { key: "autoimmune", name: "Autoimmune", value: 40, color: "#1E88E5" },
+  { key: "aging", name: "Healthy aging", value: 15, color: "#0CA678" },
+  { key: "infectious", name: "Infectious", value: 20, color: "#F59E0B" },
+  { key: "oncology", name: "Oncology-adjacent", value: 25, color: "#C62828" },
+] as const;
+function lighten(hex: string, amt = 28) {
+  const h = hex.replace("#", "");
+  const num = parseInt(h, 16);
+  let r = (num >> 16) + amt;
+  let g = ((num >> 8) & 0xff) + amt;
+  let b = (num & 0xff) + amt;
+  r = Math.max(0, Math.min(255, r));
+  g = Math.max(0, Math.min(255, g));
+  b = Math.max(0, Math.min(255, b));
+  return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b
+    .toString(16)
+    .padStart(2, "0")}`;
+}
+
+/* ===================== Page ===================== */
 export default function Page() {
   const [lang, setLang] = useState<Lang>(DEFAULT_LANG);
+
+  // init language from cookie/localStorage/navigator once
+  useEffect(() => {
+    const fromCookie = getCookie("NEXT_LOCALE") as Lang | null;
+    const fromLS = (typeof window !== "undefined" && localStorage.getItem("NEXT_LOCALE")) as Lang | null;
+    const nav = (typeof navigator !== "undefined" && navigator.language) || "";
+    const guess: Lang =
+      fromCookie || fromLS || (nav.startsWith("ru") ? "RU" : nav.startsWith("ar") ? "AR" : "EN");
+    setLang(guess);
+  }, []);
+
   const d = dict[lang];
   const isRTL = d.dir === "rtl";
 
   useEffect(() => {
     document.documentElement.dir = d.dir;
     document.documentElement.lang = d.langLabel.toLowerCase();
-  }, [d]);
+  }, [d.dir, d.langLabel]);
 
   const MenuLink = ({ label, target }: { label: string; target: string }) => (
     <button
@@ -521,150 +551,89 @@ export default function Page() {
     </button>
   );
 
-  const contactMailto = buildContactMailto(lang);
-  const licenseeMailto = buildLicenseeMailto(lang);
-
   return (
-    <div
-      className="min-h-screen bg-white text-slate-900 selection:bg-emerald-200/60"
-      style={{ fontFamily: "var(--font-sans)" }}
-    >
-     {/* Header with brand name and compact sub-badge under it */}
-<header className="sticky top-0 z-40 w-full bg-[#F9FAFB] border-b border-slate-200">
-  <div className="mx-auto max-w-[1200px] w-full px-4 py-2 flex items-center justify-between gap-4">
-    {/* ЛЕВО: inline-SVG колба + (бренд + ультра-компактный бейдж под ним) */}
-    <div className={`flex items-start gap-3 min-w-0 ${isRTL ? "flex-row-reverse" : ""}`}>
-      <FlaskIcon size={28} className="text-slate-900 dark:text-teal-400 mt-[2px]" />
+    <div className="min-h-screen bg-white text-slate-900 selection:bg-emerald-200/60" style={{ fontFamily: "var(--font-sans)" }}>
+      {/* ===================== Header ===================== */}
+      <header className="sticky top-0 z-40 w-full bg-[#F9FAFB] border-b border-slate-200">
+        <div className="mx-auto max-w-[1200px] w-full px-6 py-2 flex items-center justify-between gap-4">
+          {/* Left: icon + brand + tiny badge */}
+          <div className={`flex items-start gap-3 min-w-0 ${isRTL ? "flex-row-reverse" : ""}`}>
+            <FlaskIcon size={28} className="text-[#0EA5E9] dark:text-[#14B8A6] mt-[1px] h-[24px] w-[24px] md:h-[28px] md:w-[28px]" />
 
-      <div className={`flex flex-col leading-none ${isRTL ? "items-end" : "items-start"}`}>
-        <span className="text-[20px] md:text-[24px] font-extrabold text-[#0B1220]">
-          Regulina-T™
-        </span>
-
-        {/* Бейдж — без анимации, одна строка, компактный */}
-        <span
-          className="mt-1 inline-flex items-center rounded-full border px-[6px] py-[1px]
-                     text-[10px] md:text-[11px] leading-[11px]
-                     font-semibold text-[#047857] whitespace-nowrap"
-          style={{ background: "#F0FDF4", borderColor: "#BBF7D0", height: "12px" }}
-        >
-          RGN-T1™ IMMUNOREGULATOR
-        </span>
-      </div>
-    </div>
-
-    {/* ПРАВО: языковой свитчер */}
-    <div className="flex items-center gap-2 shrink-0">
-      {(["EN","RU","AR"] as const).map((l) => {
-        const active = lang === l;
-        return (
-          <button
-            key={l}
-            onClick={() => setLang(l)}
-            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition
-              ${active
-                ? "bg-emerald-500 text-white border border-transparent"
-                : "bg-white text-slate-800 border border-[#CBD5E1] hover:bg-slate-50"}`}
-            aria-pressed={active}
-          >
-            {l}
-          </button>
-        );
-      })}
-    </div>
-  </div>
-</header>
-
-      {/* Hero */}
-      <section id="home" className="relative overflow-hidden">
-        <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 items-center gap-10 px-4 py-12 md:grid-cols-2 md:py-20">
-          {/* left column */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <div
-                className="uppercase"
-                style={{
-                  letterSpacing: "0.04em",
-                  fontWeight: 600,
-                  fontSize: "18px",
-                  lineHeight: 1.2,
-                  color: "rgba(14,165,233,.85)",
-                }}
+            <div className={`flex flex-col leading-none ${isRTL ? "items-end" : "items-start"}`}>
+              <span className="text-[20px] md:text-[24px] font-extrabold text-[#0B1220]">Regulina-T™</span>
+              <span
+                className="mt-1 inline-flex items-center rounded-full border px-[6px] py-[1px]
+                           text-[10px] md:text-[11px] leading-[12px]
+                           font-semibold text-[#047857] whitespace-nowrap"
+                style={{ background: "#E6FDF5", borderColor: brand.pillBorder, height: "16px" }}
+                aria-hidden="true"
               >
-                {d.hero.pretitle}
-              </div>
-              <h1
-                className="mt-3 font-extrabold"
-                style={{ color: brand.ink, fontSize: "36px", lineHeight: 1.1 }}
-              >
-                <span
-                  className="block md:text-[60px]"
-                  style={{ fontSize: "36px", lineHeight: 1.1 }}
-                >
-                  {d.hero.title1}
-                </span>
-              </h1>
-              <div
-                className="mt-1 font-bold"
-                style={{
-                  color: brand.ink,
-                  opacity: 0.9,
-                  fontSize: "24px",
-                  lineHeight: 1.2,
-                }}
-              >
-                <span className="block md:text-[42px]">{d.hero.title2}</span>
-              </div>
-              <p
-                className="mt-4 max-w-[720px]"
-                style={{
-                  fontSize: "18px",
-                  lineHeight: 1.6,
-                  color: "rgba(11,18,32,.72)",
-                }}
-              >
-                Regulina-T™ — {d.hero.paragraph}
-              </p>
-
-              {/* CTA hero: Contact | Licensee */}
-              <div
-                className={`mt-5 flex ${
-                  isRTL ? "flex-row-reverse" : ""
-                } gap-4 sm:flex-row sm:items-center max-sm:flex-col max-sm:items-stretch`}
-              >
-                <a
-                  href={contactMailto}
-                  className="inline-flex items-center justify-center gap-2 rounded-[14px] border px-5 text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  style={{
-                    background: "#16A34A",
-                    borderColor: "#16A34A",
-                    height: "46px",
-                  }}
-                >
-                  <Mail size={16} /> {d.blocks.ctas.contact}
-                  <ArrowRight size={16} />
-                </a>
-                <a
-                  href={licenseeMailto}
-                  className="inline-flex items-center justify-center gap-2 rounded-[14px] border px-5 text-sm font-semibold text-slate-900 transition hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-300"
-                  style={{ background: "#FFFFFF", borderColor: "#E2E8F0", height: "46px" }}
-                >
-                  <Users2 size={16} /> {d.blocks.ctas.licensee}
-                </a>
-              </div>
-            </motion.div>
+                RGN-T1™ IMMUNOREGULATOR
+              </span>
+            </div>
           </div>
 
-          {/* right column — YouTube (clean embed) */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
+          {/* Center nav (hidden on small) */}
+          <nav className="hidden items-center gap-1 md:flex">
+            <MenuLink label={d.menu[0]} target="home" />
+            <MenuLink label={d.menu[1]} target="science" />
+            <MenuLink label={d.menu[2]} target="platform" />
+            <MenuLink label={d.menu[3]} target="partnership" />
+            <MenuLink label={d.menu[4]} target="contacts" />
+          </nav>
+
+          {/* Right: Language switcher */}
+          <div className="flex items-center gap-4 shrink-0">
+            <LanguageSwitcher lang={lang} onChange={setLang} isRTL={isRTL} />
+          </div>
+        </div>
+      </header>
+
+      {/* ===================== Hero ===================== */}
+      <section id="home" className="relative overflow-hidden">
+        <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 items-center gap-10 px-4 py-12 md:grid-cols-2 md:py-20">
+          {/* left */}
+          <div>
+            <div
+              className="uppercase"
+              style={{ letterSpacing: "0.04em", fontWeight: 600, fontSize: "18px", lineHeight: 1.2, color: "rgba(14,165,233,.85)" }}
+            >
+              {d.hero.pretitle}
+            </div>
+            <h1 className="mt-3 font-extrabold" style={{ color: brand.ink, fontSize: "36px", lineHeight: 1.1 }}>
+              <span className="block md:text-[60px]" style={{ fontSize: "36px", lineHeight: 1.1 }}>
+                {d.hero.title1}
+              </span>
+            </h1>
+            <div className="mt-1 font-bold" style={{ color: brand.ink, opacity: 0.9, fontSize: "24px", lineHeight: 1.2 }}>
+              <span className="block md:text-[42px]">{d.hero.title2}</span>
+            </div>
+            <p className="mt-4 max-w-[720px]" style={{ fontSize: "18px", lineHeight: 1.6, color: "rgba(11,18,32,.72)" }}>
+              Regulina-T™ — {d.hero.paragraph}
+            </p>
+
+            {/* CTA: Contact | Licensee */}
+            <div className={`mt-5 flex ${isRTL ? "flex-row-reverse" : ""} gap-4 sm:flex-row sm:items-center max-sm:flex-col max-sm:items-stretch`}>
+              <a
+                href={buildContactMailto(lang)}
+                className="inline-flex items-center justify-center gap-2 rounded-[14px] border px-5 text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                style={{ background: "#16A34A", borderColor: "#16A34A", height: "46px" }}
+              >
+                <Mail size={16} /> {dict[lang].blocks.ctas.contact} <ArrowRight size={16} />
+              </a>
+              <a
+                href={buildLicenseeMailto(lang)}
+                className="inline-flex items-center justify-center gap-2 rounded-[14px] border px-5 text-sm font-semibold text-slate-900 transition hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-300"
+                style={{ background: "#FFFFFF", borderColor: "#E2E8F0", height: "46px" }}
+              >
+                <Users2 size={16} /> {dict[lang].blocks.ctas.licensee}
+              </a>
+            </div>
+          </div>
+
+          {/* right — YouTube (clean embed) */}
+          <div>
             <Card className="relative aspect-video w-full overflow-hidden p-0">
               <iframe
                 className="h-full w-full"
@@ -678,24 +647,19 @@ export default function Page() {
               />
               <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-emerald-500/30" />
             </Card>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Mission */}
+      {/* ===================== Mission ===================== */}
       <section className="border-y border-slate-200">
         <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-4 px-4 py-10 md:grid-cols-2 md:gap-6">
           <Card className="p-6 md:p-8">
-            <h3 className="text-xl font-semibold text-[#111827]">
-              {d.blocks.missionTitle}
-            </h3>
-            <ul className={`mt-3 space-y-2 ${isRTL ? "text-right" : ""}`}>
+            <h3 className="text-xl font-semibold text-[#111827]">{d.blocks.missionTitle}</h3>
+            <ul className={`${isRTL ? "text-right" : ""} mt-3 space-y-2`}>
               {d.blocks.missionBullets.map((b, i) => (
                 <li key={i} className="flex items-start gap-2 text-slate-700">
-                  <CheckCircle2
-                    className="mt-0.5 shrink-0 text-emerald-600"
-                    size={18}
-                  />
+                  <CheckCircle2 className="mt-0.5 shrink-0 text-emerald-600" size={18} />
                   <span>{b}</span>
                 </li>
               ))}
@@ -703,59 +667,37 @@ export default function Page() {
           </Card>
           <div className="grid grid-cols-2 gap-4 md:gap-6">
             <Card className="p-6 md:p-8">
-              <div className="text-emerald-700">
-                {d.blocks.marketStats.patients}
-              </div>
+              <div className="text-emerald-700">{d.blocks.marketStats.patients}</div>
             </Card>
             <Card className="p-6 md:p-8">
-              <div className="text-emerald-700">
-                {d.blocks.marketStats.size}
-              </div>
+              <div className="text-emerald-700">{d.blocks.marketStats.size}</div>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* Science */}
+      {/* ===================== Science ===================== */}
       <section id="science" className="scroll-mt-20">
         <div className="mx-auto max-w-[1200px] px-4 py-16">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <Card className="p-6 md:p-8">
-              <h2 className="text-2xl font-semibold text-[#111827]">
-                {d.blocks.scienceTitle}
-              </h2>
+              <h2 className="text-2xl font-semibold text-[#111827]">{d.blocks.scienceTitle}</h2>
               {d.blocks.scienceMain.map((p, i) => (
                 <p key={i} className="text-[#111827]">
                   {p}
                 </p>
               ))}
-              <ul
-                className={`mt-4 grid list-none grid-cols-1 gap-2 p-0 sm:grid-cols-2 ${
-                  isRTL ? "text-right" : ""
-                }`}
-              >
+              <ul className={`mt-4 grid list-none grid-cols-1 gap-2 p-0 sm:grid-cols-2 ${isRTL ? "text-right" : ""}`}>
                 {d.blocks.scienceList.map((li, i) => (
-                  <li
-                    key={i}
-                    className="flex items-start gap-2 text-slate-700"
-                  >
-                    <Shield
-                      className="mt-0.5 shrink-0 text-emerald-600"
-                      size={18}
-                    />
+                  <li key={i} className="flex items-start gap-2 text-slate-700">
+                    <Shield className="mt-0.5 shrink-0 text-emerald-600" size={18} />
                     <span>{li}</span>
                   </li>
                 ))}
               </ul>
               <div className="mt-5 rounded-xl bg-emerald-50 p-4 text-emerald-900 ring-1 ring-emerald-200">
-                <div className="text-sm font-semibold">
-                  {d.blocks.dosingTitle}
-                </div>
-                <ul
-                  className={`mt-2 list-disc space-y-1 pl-5 ${
-                    isRTL ? "pl-0 pr-5" : ""
-                  }`}
-                >
+                <div className="text-sm font-semibold">{d.blocks.dosingTitle}</div>
+                <ul className={`mt-2 list-disc space-y-1 pl-5 ${isRTL ? "pl-0 pr-5" : ""}`}>
                   {d.blocks.dosingBullets.map((x, i) => (
                     <li key={i}>{x}</li>
                   ))}
@@ -764,32 +706,20 @@ export default function Page() {
             </Card>
 
             <Card className="p-6 md:p-8">
-              <h3 className="mb-4 text-sm font-semibold text-slate-600">
-                Infographic — addressable segments
-              </h3>
+              <h3 className="mb-4 text-sm font-semibold text-slate-600">Infographic — addressable segments</h3>
               <div className="h-64 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <defs>
                       {marketPie.map((s) => (
-                        <linearGradient
-                          id={`grad-${s.key}`}
-                          key={s.key}
-                          x1="0"
-                          y1="0"
-                          x2="1"
-                          y2="1"
-                        >
+                        <linearGradient id={`grad-${s.key}`} key={s.key} x1="0" y1="0" x2="1" y2="1">
                           <stop offset="0%" stopColor={lighten(s.color, 28)} />
                           <stop offset="100%" stopColor={s.color} />
                         </linearGradient>
                       ))}
                     </defs>
                     <Pie
-                      data={marketPie.map((s) => ({
-                        ...s,
-                        fill: `url(#grad-${s.key})`,
-                      }))}
+                      data={marketPie.map((s) => ({ ...s, fill: `url(#grad-${s.key})` }))}
                       dataKey="value"
                       nameKey="name"
                       outerRadius={90}
@@ -804,10 +734,7 @@ export default function Page() {
                         <div className="mx-auto mt-2 flex max-w-sm flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs">
                           {marketPie.map((s) => (
                             <div key={s.key} className="flex items-center gap-2">
-                              <span
-                                className="inline-block h-2.5 w-2.5 rounded-full"
-                                style={{ background: s.color }}
-                              />
+                              <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: s.color }} />
                               <span className="text-[#111827]">{s.name}</span>
                             </div>
                           ))}
@@ -817,30 +744,23 @@ export default function Page() {
                   </PieChart>
                 </ResponsiveContainer>
               </div>
-              <p className="mt-3 text-xs text-slate-500">
-                Illustrative split. Final segmentation per research.
-              </p>
+              <p className="mt-3 text-xs text-slate-500">Illustrative split. Final segmentation per research.</p>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* Platform */}
+      {/* ===================== Platform ===================== */}
       <section id="platform" className="scroll-mt-20">
         <div className="mx-auto max-w-[1200px] px-4 py-16">
           <Card className="p-6 md:p-8">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
-                <h2 className="text-2xl font-semibold text-[#111827]">
-                  {d.blocks.platformTitle}
-                </h2>
+                <h2 className="text-2xl font-semibold text-[#111827]">{d.blocks.platformTitle}</h2>
                 <ul className={`mt-4 space-y-2 ${isRTL ? "text-right" : ""}`}>
                   {d.blocks.platformBullets.map((x, i) => (
                     <li key={i} className="flex items-start gap-2 text-slate-700">
-                      <FlaskConical
-                        className="mt-0.5 shrink-0 text-emerald-600"
-                        size={18}
-                      />
+                      <FlaskConical className="mt-0.5 shrink-0 text-emerald-600" size={18} />
                       <span>{x}</span>
                     </li>
                   ))}
@@ -848,40 +768,22 @@ export default function Page() {
               </div>
 
               <div className="grid grid-cols-2 gap-4 md:gap-6">
-                <Feature
-                  icon={<Shield />}
-                  title="GMP/GLP"
-                  desc="Quality by design, audit-ready."
-                />
-                <Feature
-                  icon={<Users2 />}
-                  title="T-cell focus"
-                  desc="Repertoire renewal."
-                />
-                <Feature
-                  icon={<FlaskConical />}
-                  title="Bioreactors"
-                  desc="Scalable upstream."
-                />
-                <Feature
-                  icon={<Globe2 />}
-                  title="Access"
-                  desc="Global health impact."
-                />
+                <Feature icon={<Shield />} title="GMP/GLP" desc="Quality by design, audit-ready." />
+                <Feature icon={<Users2 />} title="T-cell focus" desc="Repertoire renewal." />
+                <Feature icon={<FlaskConical />} title="Bioreactors" desc="Scalable upstream." />
+                <Feature icon={<Shield />} title="Access" desc="Global health impact." />
               </div>
             </div>
           </Card>
         </div>
       </section>
 
-      {/* Partnership */}
+      {/* ===================== Partnership ===================== */}
       <section id="partnership" className="scroll-mt-20">
         <div className="mx-auto max-w-[1200px] px-4 py-16">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
             <Card className="p-6 md:p-8 md:col-span-1">
-              <h2 className="text-2xl font-semibold text-[#111827]">
-                {d.blocks.partnerTitle}
-              </h2>
+              <h2 className="text-2xl font-semibold text-[#111827]">{d.blocks.partnerTitle}</h2>
               <p className="mt-3 text-slate-700">{d.blocks.partnerLead}</p>
             </Card>
 
@@ -893,9 +795,7 @@ export default function Page() {
                       {i + 1}
                     </div>
                     <div>
-                      <div className="font-semibold text-slate-900">
-                        {x.split(" ")[0]}
-                      </div>
+                      <div className="font-semibold text-slate-900">{x.split(" ")[0]}</div>
                       <div className="text-sm text-slate-600">{x}</div>
                     </div>
                   </div>
@@ -903,11 +803,7 @@ export default function Page() {
               ))}
             </div>
 
-            <div
-              className={`mt-5 flex ${
-                isRTL ? "flex-row-reverse" : ""
-              } items-center gap-3 md:col-span-3`}
-            >
+            <div className={`mt-5 flex ${isRTL ? "flex-row-reverse" : ""} items-center gap-3 md:col-span-3`}>
               <a
                 href={buildContactMailto(lang)}
                 className="inline-flex items-center gap-2 rounded-[14px] px-4 py-2 text-sm font-semibold text-white"
@@ -928,20 +824,15 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Contacts */}
+      {/* ===================== Contacts ===================== */}
       <section id="contacts" className="scroll-mt-20">
         <div className="mx-auto max-w-[1200px] px-4 pb-28 pt-16">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
             <Card className="p-6 md:p-8">
-              <h2 className="text-2xl font-semibold text-[#111827]">
-                {d.blocks.contactsTitle}
-              </h2>
+              <h2 className="text-2xl font-semibold text-[#111827]">{d.blocks.contactsTitle}</h2>
               <p className="mt-3 text-slate-700">
                 Email:{" "}
-                <a
-                  className="font-semibold text-emerald-700 hover:underline"
-                  href={`mailto:${CONTACT_EMAIL}`}
-                >
+                <a className="font-semibold text-emerald-700 hover:underline" href={`mailto:${CONTACT_EMAIL}`}>
                   {CONTACT_EMAIL}
                 </a>
               </p>
@@ -964,9 +855,7 @@ export default function Page() {
                   <Input label={d.blocks.form.email} type="email" />
                   <Input label={d.blocks.form.org} />
                   <label className="block text-sm">
-                    <span className="mb-1 block text-slate-700">
-                      {d.blocks.form.msg}
-                    </span>
+                    <span className="mb-1 block text-slate-700">{d.blocks.form.msg}</span>
                     <textarea
                       rows={5}
                       className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none ring-emerald-500/0 transition focus:ring-emerald-500/50"
@@ -992,28 +881,19 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Sticky CTA */}
+      {/* ===================== Sticky CTA ===================== */}
       <div className="fixed inset-x-0 bottom-3 z-40 px-4">
         <div
           className="mx-auto max-w-3xl rounded-2xl border"
           style={{
             background: "rgba(255,255,255,0.95)",
             borderColor: brand.pillBorder,
-            boxShadow:
-              "0 8px 24px rgba(2,6,23,0.08), 0 18px 40px rgba(2,6,23,0.10)",
+            boxShadow: "0 8px 24px rgba(2,6,23,0.08), 0 18px 40px rgba(2,6,23,0.10)",
           }}
         >
-          <div
-            className={`flex ${
-              isRTL ? "flex-row-reverse" : ""
-            } flex-wrap items-center justify-between gap-3 p-3`}
-          >
-            <div className="text-sm font-semibold text-slate-900">
-              Regulina-T™ — RGN-T1™ Platform
-            </div>
-            <div
-              className={`flex ${isRTL ? "flex-row-reverse" : ""} items-center gap-2`}
-            >
+          <div className={`flex ${isRTL ? "flex-row-reverse" : ""} flex-wrap items-center justify-between gap-3 p-3`}>
+            <div className="text-sm font-semibold text-slate-900">Regulina-T™ — RGN-T1™ Platform</div>
+            <div className={`flex ${isRTL ? "flex-row-reverse" : ""} items-center gap-2`}>
               <a
                 href={buildContactMailto(lang)}
                 className="rounded-[14px] px-3 py-1.5 text-xs font-semibold text-white"
@@ -1041,7 +921,7 @@ export default function Page() {
         </div>
       </div>
 
-      {/* Footer */}
+      {/* ===================== Footer ===================== */}
       <footer className="border-t border-slate-200" style={{ background: "#FFFFFF" }}>
         <div className="mx-auto flex max-w-[1200px] items-center justify-between px-4 py-6 text-xs text-slate-500">
           <div>{d.blocks.footer}</div>
