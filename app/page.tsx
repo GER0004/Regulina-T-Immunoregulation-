@@ -452,6 +452,10 @@ function LanguageSwitcher({ lang, onChange, isRTL }:{ lang:Lang; onChange:(l:Lan
 export default function Page(){
   const [lang, setLang] = useState<Lang>(DEFAULT_LANG);
   const [ultraNarrow, setUltraNarrow] = useState(false);
+const titleRef = useRef<HTMLSpanElement | null>(null);
+const sublineRef = useRef<HTMLSpanElement | null>(null);
+
+
 
 
   useEffect(()=>{
@@ -475,6 +479,21 @@ export default function Page(){
       {label}
     </button>
   );
+useEffect(() => {
+  const apply = () => {
+    const t = titleRef.current;
+    const s = sublineRef.current;
+    if (!t || !s) return;
+    s.style.display = "inline-block";
+    s.style.width = `${Math.ceil(t.offsetWidth)}px`; // ширина как у заголовка
+  };
+  apply();
+  const t1 = setTimeout(apply, 150);
+  const t2 = setTimeout(apply, 400);
+  const t3 = setTimeout(apply, 1000);
+  window.addEventListener("resize", apply);
+  return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); window.removeEventListener("resize", apply); };
+}, [lang]);
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-white text-slate-900 selection:bg-emerald-200/60" style={{ fontFamily:"var(--font-sans)" }}>
@@ -484,23 +503,19 @@ export default function Page(){
           <div className={`flex items-start gap-3 min-w-0 ${isRTL ? "flex-row-reverse" : ""}`}>
             <FlaskIcon size={28} className="text-[#0EA5E9] dark:text-[#14B8A6] mt-[1px] h-[24px] w-[24px] md:h-[28px] md:w-[28px]" />
             <div className={`flex flex-col leading-none ${isRTL ? "items-end" : "items-start"}`}>
-              <span className="mt-1 inline-block text-[9px] sm:text-[10px] md:text-[11px] font-semibold tracking-[0.04em] text-emerald-700">
-  RGN-T1™ IMMUNOREGULATOR
-</span>
+               <span
+    ref={titleRef}
+    className="text-[20px] md:text-[24px] font-extrabold text-[#0B1220] whitespace-nowrap [word-break:keep-all] [hyphens:none]"
+  >
+    Regulina-T™
+  </span>
 
-              <span
-                className="mt-1 inline-flex items-center justify-center rounded-full border px-[8px] py-[2px]
-                           text-[10px] md:text-[11px] leading-[12px] font-semibold text-[#047857] whitespace-nowrap"
-                style={{
-                  background:"#E6FDF5",
-                  borderColor: brand.pillBorder,
-                  height:"16px",
-                  boxSizing:"border-box",
-                }}
-                aria-hidden="true"
-              >
-                RGN-T1™ IMMUNOREGULATOR
-              </span>
+  <span
+    ref={sublineRef}
+    className="mt-1 inline-block text-[10px] md:text-[12px] font-semibold tracking-[0.04em] text-emerald-700"
+  >
+    RGN-T1™ IMMUNOREGULATOR
+  </span>
             </div>
           </div>
 
