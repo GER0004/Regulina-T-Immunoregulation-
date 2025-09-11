@@ -12,3 +12,16 @@ html, body {
   font-family: var(--font-sans);
   background: #ffffff;
 }
+/* === Hero pretitle: fade-in + slide-up === */
+@keyframes rt-fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.rt-fadeUp {
+  animation: rt-fadeUp 0.7s ease-out 0.25s both; /* 0.7s длительность, 0.25s задержка */
+}
+
+/* Учитываем настройки пользователя */
+@media (prefers-reduced-motion: reduce) {
+  .rt-fadeUp { animation: none !important; }
+}
