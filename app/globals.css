@@ -17,11 +17,21 @@ html, body {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.rt-fadeUp {
-  animation: rt-fadeUp 0.7s ease-out 0.25s both; /* 0.7s длительность, 0.25s задержка */
+.rt-fadeUp { animation: rt-fadeUp 0.7s ease-out 0.25s both; }
+
+/* === Typewriter caret === */
+@keyframes rt-caret-blink {
+  0%,49% { opacity: 1; }
+  50%,100% { opacity: 0; }
+}
+.rt-caret {
+  display:inline-block; width:1px; height:1em; background: currentColor;
+  margin-inline-start:2px; vertical-align: -0.15em;
+  animation: rt-caret-blink 1s steps(1) infinite;
 }
 
 /* Учитываем настройки пользователя */
 @media (prefers-reduced-motion: reduce) {
   .rt-fadeUp { animation: none !important; }
+  .rt-caret { display:none !important; }
 }
