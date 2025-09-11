@@ -589,13 +589,13 @@ export default function Page(){
                 <div className={`mt-6 flex flex-wrap gap-3 ${isRTL ? "justify-end" : "justify-start"}`}>
                   {dict[lang].mission.kpis.map((text: string, i: number)=>(
                     <span
-                      key={`kpi-${lang}-${i}`}
-                      className="inline-flex items-center rounded-2xl border px-4 py-2
-                                 text-emerald-700 font-semibold bg-emerald-50 border-emerald-200 shadow-sm
-                                 dark:text-emerald-300 dark:bg-emerald-900/30 dark:border-emerald-900/40"
-                    >
-                      {text}
-                    </span>
+  key={`kpi-${lang}-${i}`}
+  className="inline-flex items-center rounded-xl border px-4 py-2
+             text-emerald-700 font-semibold bg-white border-emerald-300 shadow
+             text-[13px] md:text-[14px]"
+>
+  {text}
+</span>
                   ))}
                 </div>
               )}
@@ -646,11 +646,14 @@ export default function Page(){
             {/* Инфографика — без горизонтального скролла, заголовок не обрезается */}
             <RevealOnView delay={120}>
               <Card className="p-6 md:p-8 overflow-visible">
-                <h3 className="mb-4 mt-7 pr-4 md:pr-5 font-normal text-[#0F172A]
-                               whitespace-nowrap [word-break:keep-all] [hyphens:none]
-                               text-[clamp(18px,5vw,22px)] md:text-[clamp(24px,2.6vw,32px)]">
-                  {ultraNarrow ? dict[lang].infographic.shortTitle : dict[lang].infographic.title}
-                </h3>
+                <h3
+  className="mb-4 mt-7 pr-4 md:pr-5 font-semibold text-[#0F172A]
+             [word-break:keep-all] [hyphens:none] leading-snug
+             text-[clamp(18px,5vw,22px)] md:text-[clamp(24px,2.6vw,32px)]"
+>
+  {ultraNarrow ? dict[lang].infographic.shortTitle : dict[lang].infographic.title}
+</h3>
+
 
                 <div className="overflow-hidden rounded-xl">
                   <figure role="group" aria-label="Market segments donut chart" className={`${isRTL ? "text-right" : ""}`}>
