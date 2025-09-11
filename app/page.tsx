@@ -400,29 +400,29 @@ function scrollToId(id: string) {
 /* =========================================================
    UI primitives
 ========================================================= */
-function BrandLogo({ className = "h-6 w-6 md:h-7 md:w-7" }: { className?: string }) {
+function FlaskIcon({ size = 28, className = "" }: { size?: number; className?: string }) {
   return (
     <svg
-      viewBox="0 0 100 100"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
       className={className}
-      aria-label="Regulina-T Logo"
     >
-      <defs>
-        <radialGradient id="g1" cx="50%" cy="50%" r="60%">
-          <stop offset="0%" stopColor="#29A3E5" />
-          <stop offset="100%" stopColor="#0369A1" />
-        </radialGradient>
-      </defs>
-      <circle cx="50" cy="50" r="48" fill="url(#g1)" />
+      {/* горлышко */}
+      <path d="M9 3h6M11 3v4M13 3v4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      {/* корпус колбы */}
       <path
-        d="M40 18h20c2 0 3 1.3 3 3v6l6 12c8 15-3 33-21 33s-29-18-21-33l6-12v-6c0-1.7 1-3 3-3z"
-        fill="none"
-        stroke="#fff"
-        strokeWidth="6"
-        strokeLinecap="round"
+        d="M8 7L6.2 10.6c-1.1 2.2.3 4.9 2.7 6a15.5 15.5 0 0 0 6.2 0c2.4-1.1 3.8-3.8 2.7-6L16 7H8Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
         strokeLinejoin="round"
+        fill="none"
       />
-      <path d="M45 18h10" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
+      {/* линия жидкости */}
+      <path d="M7.6 13.2c2.2-1.3 6.6-1.3 8.8 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
