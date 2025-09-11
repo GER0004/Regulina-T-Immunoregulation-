@@ -607,6 +607,50 @@ function LanguageSwitcher({
     </div>
   );
 }
+function Typewriter({
+  text,
+  cps = 24,          // chars per second: 22–28
+  startDelay = 800,  // мс (после прелоада слогана)
+  className = "",
+}: {
+  text: string;
+  cps?: number;
+  startDelay?: number;
+  className?: string;
+}) {
+  const [out, setOut] = React.useState("");
+  const [done, setDone] = React.useState(false);
+
+  React.useEffect(() => {
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    if (reduce) { setOut(text); setDone(true); return; }
+
+    let i = 0;
+    const startT = window.setTimeout(() => {
+      const step = Math.max(1, Math.round(cps / 4)); // порциями, чтобы ровнее
+      const tick = () => {
+        i = Math.min(text.length, i + step);
+        setOut(text.slice(0, i));
+        if (i < text.length) {
+          timer = window.setTimeout(tick, Math.max(8, 1000 / cps));
+        } else {
+          setDone(true);
+        }
+      };
+      tick();
+    }, startDelay);
+
+    let timer: number | undefined;
+    return () => { clearTimeout(startT); if (timer) clearTimeout(timer); };
+  }, [text, cps, startDelay]);
+
+  return (
+    <span className={className} aria-live="polite">
+      {out}
+      {!done && <span className="rt-caret" aria-hidden="true" />}
+    </span>
+  );
+}
 
 /* ===================== Page ===================== */
 export default function Page() {
