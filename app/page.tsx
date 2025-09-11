@@ -1,9 +1,8 @@
-// app/page.tsx
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
-  Mail, FileDown, ArrowRight, CheckCircle2,
+  Mail, ArrowRight, CheckCircle2,
   FlaskConical, Users2, Shield, Check
 } from "lucide-react";
 import { PieChart, Pie, ResponsiveContainer, Tooltip, Cell } from "recharts";
@@ -175,8 +174,8 @@ const dict = {
       paragraph: "решение, соединяющее веру, науку и современные биотехнологии — открывая новую эпоху в иммунологии и медицине.",
     },
     infographic: {
-      title: "Инфографика\u00A0—\u00A0адресуемые\u00A0сегменты",
-      shortTitle: "Инфографика\u00A0—\u00A0сегменты",
+      title: "Инфографика — адресуемые сегменты",
+      shortTitle: "Инфографика — сегменты",
     },
     segments: {
       autoimmune: "Аутоиммунные",
@@ -211,8 +210,8 @@ const dict = {
       paragraph: "حلٌ يجمع الإيمان والعِلم والتقنيات الحيوية الحديثة، لفتح عصرٍ جديد في المناعة والطب.",
     },
     infographic: {
-      title: "إنفوجرافيك\u00A0—\u00A0الفئات\u00A0القابلة\u00A0للخدمة",
-      shortTitle: "إنفوجرافيك\u00A0—\u00A0الفئات",
+      title: "إنفوجرافيك — الفئات القابلة للخدمة",
+      shortTitle: "إنفوجرافيك — الفئات",
     },
     segments: {
       autoimmune: "المناعية الذاتية",
@@ -453,54 +452,10 @@ function LanguageSwitcher({ lang, onChange, isRTL }:{ lang:Lang; onChange:(l:Lan
 export default function Page(){
   const [lang, setLang] = useState<Lang>(DEFAULT_LANG);
   const [ultraNarrow, setUltraNarrow] = useState(false);
-const titleRef = useRef<HTMLSpanElement|null>(null);
-const pillRef = useRef<HTMLSpanElement|null>(null);
 
-useEffect(() => {
-  const apply = () => {
-    if (!titleRef.current || !pillRef.current) return;
-    const w = Math.ceil(titleRef.current.getBoundingClientRect().width);
-    pillRef.current.style.width = `${w}px`; // бейдж = ширина заголовка
-  };
-
-  apply();                         // сразу после маунта
-  document.fonts?.ready.then(apply); // после загрузки шрифтов — ширина считается точно
-
-  let ro: ResizeObserver | null = null;
-  if (typeof ResizeObserver !== "undefined" && titleRef.current) {
-    ro = new ResizeObserver(apply);
-    ro.observe(titleRef.current);
-  }
-
-  window.addEventListener("resize", apply);
-useEffect(() => {
-  const apply = () => {
-    const t = titleRef.current;
-    const p = pillRef.current;
-    if (!t || !p) return;
-    const w = Math.ceil(t.offsetWidth);
-    p.style.width = `${w}px`;
-  };
-
-  apply();
-  const t1 = setTimeout(apply, 150);
-  const t2 = setTimeout(apply, 400);
-  const t3 = setTimeout(apply, 1000);
-
-  window.addEventListener("resize", apply);
-  return () => {
-    clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
-    window.removeEventListener("resize", apply);
-  };
-}, [lang]);
-
-
-  return () => {
-    window.removeEventListener("resize", apply);
-    ro?.disconnect?.();
-  };
-}, [lang]);
-
+  // <<< refs для выравнивания ширины бейджа
+  const titleRef = useRef<HTMLSpanElement|null>(null);
+  const pillRef  = useRef<HTMLSpanElement|null>(null);
 
   useEffect(()=>{
     const fromCookie = getCookie("NEXT_LOCALE") as Lang | null;
@@ -517,13 +472,33 @@ useEffect(() => {
   const d = dict[lang]; const isRTL = d.dir==="rtl";
   useEffect(()=>{ document.documentElement.dir = d.dir; document.documentElement.lang = lang.toLowerCase(); },[d.dir,lang]);
 
+  // <<< БЕЗОПАСНЫЙ эффект для Safari: подгонка ширины бейджа к ширине заголовка
+  useEffect(() => {
+    const apply = () => {
+      const t = titleRef.current;
+      const p = pillRef.current;
+      if (!t || !p) return;
+      const w = Math.ceil(t.offsetWidth);
+      p.style.width = `${w}px`;
+    };
+    apply();
+    const t1 = setTimeout(apply, 150);
+    const t2 = setTimeout(apply, 400);
+    const t3 = setTimeout(apply, 1000);
+    window.addEventListener("resize", apply);
+    return () => {
+      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
+      window.removeEventListener("resize", apply);
+    };
+  }, [lang]);
+
   const MenuLink=({label,target}:{label:string;target:string;})=>(
     <button onClick={()=>scrollToId(target)} className="px-3 py-2 text-sm font-medium text-slate-700 hover:text-emerald-700 transition">
       {label}
     </button>
   );
 
-  return 
+  return (
     <div className="min-h-screen overflow-x-hidden bg-white text-slate-900 selection:bg-emerald-200/60" style={{ fontFamily:"var(--font-sans)" }}>
       {/* ===== Header ===== */}
       <header className="sticky top-0 z-40 w-full bg-[#F9FAFB] border-b border-slate-200">
@@ -532,39 +507,25 @@ useEffect(() => {
             <FlaskIcon size={28} className="text-[#0EA5E9] dark:text-[#14B8A6] mt-[1px] h-[24px] w-[24px] md:h-[28px] md:w-[28px]" />
             <div className={`flex flex-col leading-none ${isRTL ? "items-end" : "items-start"}`}>
               <span
-  ref={titleRef}
-  className="text-[20px] md:text-[24px] font-extrabold text-[#0B1220] whitespace-nowrap [word-break:keep-all] [hyphens:none]"
->
-  Regulina-T™
-</span>
-
-             <span
-  ref={pillRef}
-  className="mt-1 inline-flex items-center justify-center rounded-full border px-[8px] py-[2px]
-             text-[10px] md:text-[11px] leading-[12px] font-semibold text-[#047857] whitespace-nowrap"
-  style={{
-    background: "#E6FDF5",
-    borderColor: brand.pillBorder,
-    height: "16px",
-    boxSizing: "border-box", // ширина включает padding и border
-  }}
-  aria-hidden="true"
-<span
-  ref={pillRef}
-  className="mt-1 inline-flex items-center justify-center rounded-full border px-[8px] py-[2px]
-             text-[10px] md:text-[11px] leading-[12px] font-semibold text-[#047857] whitespace-nowrap"
-  style={{
-    background: "#E6FDF5",
-    borderColor: brand.pillBorder,
-    height: "16px",
-    boxSizing: "border-box",
-  }}
-  aria-hidden="true"
->
-  RGN-T1™ IMMUNOREGULATOR
-</span>
-
-
+                ref={titleRef}
+                className="text-[20px] md:text-[24px] font-extrabold text-[#0B1220] whitespace-nowrap [word-break:keep-all] [hyphens:none]"
+              >
+                Regulina-T™
+              </span>
+              <span
+                ref={pillRef}
+                className="mt-1 inline-flex items-center justify-center rounded-full border px-[8px] py-[2px]
+                           text-[10px] md:text-[11px] leading-[12px] font-semibold text-[#047857] whitespace-nowrap"
+                style={{
+                  background:"#E6FDF5",
+                  borderColor: brand.pillBorder,
+                  height:"16px",
+                  boxSizing:"border-box",
+                }}
+                aria-hidden="true"
+              >
+                RGN-T1™ IMMUNOREGULATOR
+              </span>
             </div>
           </div>
 
@@ -661,20 +622,17 @@ useEffect(() => {
               </ul>
 
               {/* KPI chips */}
-              {Array.isArray(dict[lang].mission.kpis) && dict[lang].mission.kpis.length>0 && (
-                <div className={`mt-6 flex flex-wrap gap-3 ${isRTL ? "justify-end" : "justify-start"}`}>
-                  {dict[lang].mission.kpis.map((text: string, i: number)=>(
-                    <span
-  key={`kpi-${lang}-${i}`}
-  className="inline-flex items-center rounded-xl border px-4 py-2
-             text-emerald-700 font-semibold bg-white border-emerald-300 shadow
-             text-[13px] md:text-[14px]"
->
-  {text}
-</span>
-                  ))}
-                </div>
-              )}
+              <div className={`mt-6 flex flex-wrap gap-3 ${isRTL ? "justify-end" : "justify-start"}`}>
+                {dict[lang].mission.kpis.map((text: string, i: number)=>(
+                  <span
+                    key={`kpi-${lang}-${i}`}
+                    className="inline-flex items-center rounded-xl border px-4 py-2
+                               bg-white text-emerald-800 font-semibold border-emerald-400 shadow-md text-[14px]"
+                  >
+                    {text}
+                  </span>
+                ))}
+              </div>
             </Card>
           </RevealOnView>
         </div>
@@ -719,20 +677,15 @@ useEffect(() => {
               </Card>
             </RevealOnView>
 
-            {/* Инфографика — без горизонтального скролла, заголовок не обрезается */}
             <RevealOnView delay={120}>
               <Card className="p-6 md:p-8 overflow-visible">
-               <h3
-  className={`mb-4 mt-7 ${isRTL ? "pl-4 md:pl-5" : "pr-4 md:pr-5"}
-             font-semibold text-[#0F172A] leading-snug
-             whitespace-normal break-words [hyphens:auto]
-             text-[clamp(18px,5vw,22px)] md:text-[clamp(24px,2.6vw,32px)]`}
->
-  {(ultraNarrow ? dict[lang].infographic.shortTitle : dict[lang].infographic.title)
-    .replace(/\u00A0/g, " ")}
-</h3>
-
-
+                <h3
+                  className={`mb-4 mt-7 ${isRTL ? "pl-4 md:pl-5" : "pr-4 md:pr-5"} font-semibold text-[#0F172A]
+                             whitespace-normal break-words [hyphens:auto]
+                             text-[clamp(18px,5vw,22px)] md:text-[clamp(24px,2.6vw,32px)]`}
+                >
+                  {(ultraNarrow ? dict[lang].infographic.shortTitle : dict[lang].infographic.title).replace(/\u00A0/g, " ")}
+                </h3>
 
                 <div className="overflow-hidden rounded-xl">
                   <figure role="group" aria-label="Market segments donut chart" className={`${isRTL ? "text-right" : ""}`}>
@@ -773,13 +726,11 @@ useEffect(() => {
                             })}
                           </Pie>
 
-                          {/* тултип без процентов */}
                           <Tooltip content={<SegmentTooltip/>}/>
                         </PieChart>
                       </ResponsiveContainer>
                     </div>
 
-                    {/* легенда — кликабельная зона >= 32px */}
                     <div className={`mx-auto mt-3 grid max-w-[520px] grid-cols-1 gap-x-4 gap-y-2 text-xs sm:grid-cols-2 ${isRTL?"text-right":""}`} aria-label="Legend">
                       {( ["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[] ).map((k)=>{
                         const label =
