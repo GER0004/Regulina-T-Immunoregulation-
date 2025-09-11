@@ -1,3 +1,4 @@
+// app/page.tsx
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -100,7 +101,7 @@ function FlaskIcon({ size = 28, className = "" }: { size?: number; className?: s
   );
 }
 
-/* ===================== Section Title (glass pill) ===================== */
+/* ===================== Section Title (square glass 3D) ===================== */
 function SectionTitle({
   as="h2", children, className=""
 }:{ as?:"h2"|"h3"; children:React.ReactNode; className?:string }){
@@ -108,12 +109,18 @@ function SectionTitle({
   return (
     <Tag
       className={[
-        "inline-block rt-glass rounded-full",
-        "px-[14px] md:px-[18px] py-[8px] md:py-[10px]",
+        "inline-block rounded-xl",
+        "px-3 md:px-4 py-2 md:py-2.5",
         "text-[#0F172A] font-extrabold leading-tight",
         "text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px]",
         className,
       ].join(" ")}
+      style={{
+        background: "linear-gradient(180deg, rgba(255,255,255,0.66), rgba(255,255,255,0.4))",
+        border: "1px solid rgba(16,185,129,0.35)",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.60), 0 8px 22px rgba(2,6,23,0.08)",
+        backdropFilter: "saturate(140%) blur(6px)"
+      }}
     >
       {children}
     </Tag>
@@ -141,17 +148,15 @@ const dict = {
       infectious: "Infectious",
       oncologyAdjacent: "Oncology-adjacent",
       transplantationTherapy: "Transplantation therapy",
-mission: {
-  title: "Mission",
-  bullets: [
-    "Regulina-T™ aims to regenerate the thymus and fully restore immune function.",
-    "> 2.5B patients addressable globally.",
-    ">$500B yearly economic potential.",
-    "Humanitarian effect: a healthier, more productive humanity."
-  ],
-  kpis: ["> 2.5B patients", ">$500B yearly"] // ← эти две строки появятся в «квадратиках»
-},
-
+    },
+    mission: {
+      bullets: [
+        "Regulina-T™ aims to regenerate the thymus and fully restore immune function.",
+        "> 2.5B patients addressable globally.",
+        ">$500B yearly economic potential.",
+        "Humanitarian effect: a healthier, more productive humanity."
+      ],
+      kpis: ["> 2.5B patients", ">$500B yearly"]
     },
     lbl: {
       mission:"Mission", science:"Scientific basis", platform:"Regulina-T™ Platform",
@@ -179,17 +184,15 @@ mission: {
       infectious: "Инфекционные",
       oncologyAdjacent: "Смежные с онкологией",
       transplantationTherapy: "Трансплантационная терапия",
-mission: {
-  title: "Миссия",
-  bullets: [
-    "Regulina-T™ направлена на регенерацию тимуса и полное восстановление иммунной функции.",
-    "> 2,5 млрд пациентов по всему миру.",
-    ">$500 млрд ежегодный экономический потенциал.",
-    "Гуманитарный эффект: более здоровое и продуктивное человечество."
-  ],
-  kpis: ["> 2,5 млрд пациентов", ">$500 млрд ежегодно"]
-},
-
+    },
+    mission: {
+      bullets: [
+        "Regulina-T™ направлена на регенерацию тимуса и полное восстановление иммунной функции.",
+        "⟩ 2,5 млрд пациентов по всему миру.",
+        "⟩$500 млрд — ежегодный экономический потенциал.",
+        "Гуманитарный эффект: более здоровое и продуктивное человечество."
+      ],
+      kpis: ["⟩ 2,5 млрд пациентов", "⟩$500 млрд ежегодно"]
     },
     lbl: {
       mission:"Миссия", science:"Научная основа", platform:"Платформа Regulina-T™",
@@ -217,17 +220,15 @@ mission: {
       infectious: "الأمراض المعدية",
       oncologyAdjacent: "المجاورة للأورام",
       transplantationTherapy: "العلاج بالزرع",
-mission: {
-  title: "المهمة",
-  bullets: [
-    "تهدف Regulina-T™ إلى تجديد الغدة الصعترية واستعادة وظيفة المناعة بالكامل.",
-    "> ٢٫٥ مليار مريض يمكن الوصول إليهم عالمياً.",
-    ">$٥٠٠ مليار عائد اقتصادي سنوي محتمل.",
-    "أثر إنساني: إنسانية أكثر صحة وإنتاجية."
-  ],
-  kpis: ["> ٢٫٥ مليار مريض", ">$٥٠٠ مليار سنوياً"]
-},
-
+    },
+    mission: {
+      bullets: [
+        "تهدف Regulina-T™ إلى تجديد الغدة الزعترية واستعادة وظيفة المناعة بالكامل.",
+        "> 2.5B مرضى قابلون للاستهداف عالميًا.",
+        ">$500B إمكان اقتصادي سنوي.",
+        "أثر إنساني: بشرٌ أصحّ وأكثر إنتاجية."
+      ],
+      kpis: ["> 2.5B مرضى", ">$500B سنويًا"]
     },
     lbl: {
       mission:"الرسالة", science:"الأساس العلمي", platform:"منصّة Regulina-T™",
@@ -482,7 +483,7 @@ export default function Page(){
           <div className={`flex items-start gap-3 min-w-0 ${isRTL ? "flex-row-reverse" : ""}`}>
             <FlaskIcon size={28} className="text-[#0EA5E9] dark:text-[#14B8A6] mt-[1px] h-[24px] w-[24px] md:h-[28px] md:w-[28px]" />
             <div className={`flex flex-col leading-none ${isRTL ? "items-end" : "items-start"}`}>
-              <span className="text-[20px] md:text-[24px] font-extrabold text-[#0B1220]">Regulina-T™</span>
+              <span className="text-[20px] md:text-[24px] font-extrabold text-[#0B1220] whitespace-nowrap [word-break:keep-all] [hyphens:none]">Regulina-T™</span>
               <span className="mt-1 inline-flex items-center rounded-full border px-[6px] py-[1px]
                                text-[10px] md:text-[11px] leading-[12px] font-semibold text-[#047857] whitespace-nowrap"
                     style={{ background:"#E6FDF5", borderColor: brand.pillBorder, height:"16px" }} aria-hidden="true">
@@ -566,47 +567,42 @@ export default function Page(){
         </div>
       </section>
 
-     /* ===== Mission ===== */
-<section id="mission" className="px-4 pb-[96px] md:pb-[104px]">
-  <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-4 px-4 pt-8 md:pt-10 pb-4 md:pb-5 md:grid-cols-2">
-    <RevealOnView>
-      <Card className="p-6 md:p-8">
-        <SectionTitle as="h3" className="mb-4">{(dict as any)[lang].lbl.mission}</SectionTitle>
+      {/* ===== Mission ===== */}
+      <section className="border-y border-slate-200">
+        <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-4 px-4 pt-8 md:pt-10 pb-4 md:pb-5 md:grid-cols-2 md:gap-6">
+          <RevealOnView className="md:col-span-2">
+            <Card className="p-6 md:p-8">
+              <SectionTitle as="h3" className="mb-4">{dict[lang].lbl.mission}</SectionTitle>
 
-        {/* список буллетов из i18n */}
-        <ul className={`${isRTL ? "text-right" : ""} mt-3 space-y-2`}>
-          {((dict as any)[lang].mission.bullets as string[]).map((b: string, i: number) => (
-            <li key={`m-b-${i}`} className="flex items-start gap-2 text-slate-700">
-              <CheckCircle2 className="mt-0.5 shrink-0 text-emerald-600" size={18} />
-              <TypewriterOnView text={b} />
-const missionData = (dict as any)[lang]?.mission ?? {};
-const bullets: string[] = Array.isArray(missionData.bullets) ? missionData.bullets : [];
-const kpis: string[] = Array.isArray(missionData.kpis) ? missionData.kpis : [];
+              {/* bullets */}
+              <ul className={`${isRTL ? "text-right" : ""} mt-3 space-y-2`}>
+                {dict[lang].mission.bullets.map((b: string, i: number)=>(
+                  <li key={`m-b-${i}`} className="flex items-start gap-2 text-slate-700">
+                    <CheckCircle2 className="mt-0.5 shrink-0 text-emerald-600" size={18}/>
+                    <TypewriterOnView text={b} cps={26} delay={200+i*150}/>
+                  </li>
+                ))}
+              </ul>
 
-            </li>
-          ))}
-        </ul>
-
-        {/* KPI chips — компактные бейджи под списком Mission */}
-        {Array.isArray((dict as any)[lang]?.mission?.kpis) &&
-          (dict as any)[lang].mission.kpis.length > 0 && (
-            <div className={`mt-6 flex flex-wrap gap-3 ${isRTL ? "justify-end" : "justify-start"}`}>
-              {((dict as any)[lang].mission.kpis as string[]).map((text: string, i: number) => (
-                <span
-                  key={`kpi-${lang}-${i}`}
-                  className="inline-flex items-center rounded-2xl border px-4 py-2
-                             text-emerald-700 font-semibold bg-emerald-50 border-emerald-200 shadow-sm
-                             dark:text-emerald-300 dark:bg-emerald-900/30 dark:border-emerald-900/40"
-                >
-                  {text}
-                </span>
-              ))}
-            </div>
-          )}
-      </Card>
-    </RevealOnView>
-  </div>
-</section>
+              {/* KPI chips */}
+              {Array.isArray(dict[lang].mission.kpis) && dict[lang].mission.kpis.length>0 && (
+                <div className={`mt-6 flex flex-wrap gap-3 ${isRTL ? "justify-end" : "justify-start"}`}>
+                  {dict[lang].mission.kpis.map((text: string, i: number)=>(
+                    <span
+                      key={`kpi-${lang}-${i}`}
+                      className="inline-flex items-center rounded-2xl border px-4 py-2
+                                 text-emerald-700 font-semibold bg-emerald-50 border-emerald-200 shadow-sm
+                                 dark:text-emerald-300 dark:bg-emerald-900/30 dark:border-emerald-900/40"
+                    >
+                      {text}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </Card>
+          </RevealOnView>
+        </div>
+      </section>
 
       {/* ===== Science + Infographic ===== */}
       <section id="science" className="scroll-mt-20">
