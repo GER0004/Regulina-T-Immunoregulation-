@@ -646,13 +646,16 @@ export default function Page(){
             {/* Инфографика — без горизонтального скролла, заголовок не обрезается */}
             <RevealOnView delay={120}>
               <Card className="p-6 md:p-8 overflow-visible">
-                <h3
-  className="mb-4 mt-7 pr-4 md:pr-5 font-semibold text-[#0F172A]
-             [word-break:keep-all] [hyphens:none] leading-snug
-             text-[clamp(18px,5vw,22px)] md:text-[clamp(24px,2.6vw,32px)]"
+               <h3
+  className={`mb-4 mt-7 ${isRTL ? "pl-4 md:pl-5" : "pr-4 md:pr-5"}
+             font-semibold text-[#0F172A] leading-snug
+             whitespace-normal break-words [hyphens:auto]
+             text-[clamp(18px,5vw,22px)] md:text-[clamp(24px,2.6vw,32px)]`}
 >
-  {ultraNarrow ? dict[lang].infographic.shortTitle : dict[lang].infographic.title}
+  {(ultraNarrow ? dict[lang].infographic.shortTitle : dict[lang].infographic.title)
+    .replace(/\u00A0/g, " ")}
 </h3>
+
 
 
                 <div className="overflow-hidden rounded-xl">
