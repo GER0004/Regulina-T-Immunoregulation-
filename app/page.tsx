@@ -141,6 +141,17 @@ const dict = {
       infectious: "Infectious",
       oncologyAdjacent: "Oncology-adjacent",
       transplantationTherapy: "Transplantation therapy",
+mission: {
+  title: "Mission",
+  bullets: [
+    "Regulina-T™ aims to regenerate the thymus and fully restore immune function.",
+    "> 2.5B patients addressable globally.",
+    ">$500B yearly economic potential.",
+    "Humanitarian effect: a healthier, more productive humanity."
+  ],
+  kpis: ["> 2.5B patients", ">$500B yearly"] // ← эти две строки появятся в «квадратиках»
+},
+
     },
     lbl: {
       mission:"Mission", science:"Scientific basis", platform:"Regulina-T™ Platform",
@@ -168,6 +179,17 @@ const dict = {
       infectious: "Инфекционные",
       oncologyAdjacent: "Смежные с онкологией",
       transplantationTherapy: "Трансплантационная терапия",
+mission: {
+  title: "Миссия",
+  bullets: [
+    "Regulina-T™ направлена на регенерацию тимуса и полное восстановление иммунной функции.",
+    "> 2,5 млрд пациентов по всему миру.",
+    ">$500 млрд ежегодный экономический потенциал.",
+    "Гуманитарный эффект: более здоровое и продуктивное человечество."
+  ],
+  kpis: ["> 2,5 млрд пациентов", ">$500 млрд ежегодно"]
+},
+
     },
     lbl: {
       mission:"Миссия", science:"Научная основа", platform:"Платформа Regulina-T™",
@@ -195,6 +217,17 @@ const dict = {
       infectious: "الأمراض المعدية",
       oncologyAdjacent: "المجاورة للأورام",
       transplantationTherapy: "العلاج بالزرع",
+mission: {
+  title: "المهمة",
+  bullets: [
+    "تهدف Regulina-T™ إلى تجديد الغدة الصعترية واستعادة وظيفة المناعة بالكامل.",
+    "> ٢٫٥ مليار مريض يمكن الوصول إليهم عالمياً.",
+    ">$٥٠٠ مليار عائد اقتصادي سنوي محتمل.",
+    "أثر إنساني: إنسانية أكثر صحة وإنتاجية."
+  ],
+  kpis: ["> ٢٫٥ مليار مريض", ">$٥٠٠ مليار سنوياً"]
+},
+
     },
     lbl: {
       mission:"الرسالة", science:"الأساس العلمي", platform:"منصّة Regulina-T™",
@@ -533,50 +566,43 @@ export default function Page(){
         </div>
       </section>
 
-      {/* ===== Mission ===== */}
-      <section className="border-y border-slate-200">
-        <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-4 px-4 pt-8 md:pt-10 pb-4 md:pb-5 md:grid-cols-2 md:gap-6">
-          <RevealOnView>
-            <Card className="p-6 md:p-8">
-              <SectionTitle as="h3" className="mb-4">{dict[lang].lbl.mission}</SectionTitle>
-              <ul className={`${isRTL ? "text-right" : ""} mt-3 space-y-2`}>
-                {[
-                  "Regulina-T™ aims to regenerate the thymus and fully restore immune function.",
-                  "> 2.5B patients addressable globally.",
-                  ">$500B yearly economic potential.",
-                  "Humanitarian effect: a healthier, more productive humanity."
-                ].map((b, i)=>(
-                  <li key={i} className="flex items-start gap-2 text-slate-700">
-                    <CheckCircle2 className="mt-0.5 shrink-0 text-emerald-600" size={18}/>
-                    <TypewriterOnView text={(dict as any)[lang].lbl.mission ? (dict as any)[lang].lbl.mission && (dict as any)[lang].lbl.mission && (dict as any)[lang] && (dict as any)[lang].lbl ? (dict as any)[lang].lbl && b : b : b} cps={26} delay={200+i*150}/>
-                  </li>
-                ))}
-              </ul>
-            </Card>
-          </RevealOnView>
+     /* ===== Mission ===== */
+<section id="mission" className="px-4 pb-[96px] md:pb-[104px]">
+  <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-4 px-4 pt-8 md:pt-10 pb-4 md:pb-5 md:grid-cols-2">
+    <RevealOnView>
+      <Card className="p-6 md:p-8">
+        <SectionTitle as="h3" className="mb-4">{(dict as any)[lang].lbl.mission}</SectionTitle>
 
-          <RevealOnView delay={80}>
-            <div className="grid grid-cols-2 gap-4 md:gap-6">
-              <div className="grid grid-cols-2 gap-4 md:gap-6">
-  <Card className="p-6 md:p-8">
-    <div className="text-emerald-700">
-      {/* placeholder — можно заменить на реальный KPI */}
-      KPI
-    </div>
-  </Card>
+        {/* список буллетов из i18n */}
+        <ul className={`${isRTL ? "text-right" : ""} mt-3 space-y-2`}>
+          {((dict as any)[lang].mission.bullets as string[]).map((b: string, i: number) => (
+            <li key={`m-b-${i}`} className="flex items-start gap-2 text-slate-700">
+              <CheckCircle2 className="mt-0.5 shrink-0 text-emerald-600" size={18} />
+              <TypewriterOnView text={b} />
+            </li>
+          ))}
+        </ul>
 
-  <Card className="p-6 md:p-8">
-    <div className="text-emerald-700">
-      {/* можно заменить на KPI */}
-      $500B+
-    </div>
-  </Card>
-</div>
-
+        {/* KPI chips — компактные бейджи под списком Mission */}
+        {Array.isArray((dict as any)[lang]?.mission?.kpis) &&
+          (dict as any)[lang].mission.kpis.length > 0 && (
+            <div className={`mt-6 flex flex-wrap gap-3 ${isRTL ? "justify-end" : "justify-start"}`}>
+              {((dict as any)[lang].mission.kpis as string[]).map((text: string, i: number) => (
+                <span
+                  key={`kpi-${lang}-${i}`}
+                  className="inline-flex items-center rounded-2xl border px-4 py-2
+                             text-emerald-700 font-semibold bg-emerald-50 border-emerald-200 shadow-sm
+                             dark:text-emerald-300 dark:bg-emerald-900/30 dark:border-emerald-900/40"
+                >
+                  {text}
+                </span>
+              ))}
             </div>
-          </RevealOnView>
-        </div>
-      </section>
+          )}
+      </Card>
+    </RevealOnView>
+  </div>
+</section>
 
       {/* ===== Science + Infographic ===== */}
       <section id="science" className="scroll-mt-20">
