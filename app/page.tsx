@@ -475,39 +475,22 @@ useEffect(() => {
   window.addEventListener("resize", apply);
 useEffect(() => {
   const apply = () => {
-    try {
-      const t = titleRef.current;
-      const p = pillRef.current;
-      if (!t || !p) return;
-      const w = Math.ceil(t.getBoundingClientRect().width);
-      p.style.width = `${w}px`; // бейдж = ширина заголовка
-    } catch {}
+    const t = titleRef.current;
+    const p = pillRef.current;
+    if (!t || !p) return;
+    const w = Math.ceil(t.offsetWidth);
+    p.style.width = `${w}px`;
   };
 
-  // 1) сразу после маунта/рендера
-  const raf = requestAnimationFrame(apply);
+  apply();
+  const t1 = setTimeout(apply, 150);
+  const t2 = setTimeout(apply, 400);
+  const t3 = setTimeout(apply, 1000);
 
-  // 2) после загрузки шрифтов (если браузер это поддерживает)
-  const fontsAny: any = (document as any).fonts;
-  const ready = fontsAny?.ready;
-  if (ready && typeof ready.then === "function") {
-    ready.then(apply).catch(() => {});
-  }
-
-  // 3) отслеживаем изменения ширины заголовка
-  let ro: any = null;
-  if (typeof (window as any).ResizeObserver !== "undefined" && titleRef.current) {
-    ro = new (window as any).ResizeObserver(apply);
-    ro.observe(titleRef.current);
-  }
-
-  // 4) ресайз окна
   window.addEventListener("resize", apply);
-
   return () => {
-    cancelAnimationFrame(raf);
+    clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
     window.removeEventListener("resize", apply);
-    ro?.disconnect?.();
   };
 }, [lang]);
 
@@ -566,9 +549,21 @@ useEffect(() => {
     boxSizing: "border-box", // ширина включает padding и border
   }}
   aria-hidden="true"
+<span
+  ref={pillRef}
+  className="mt-1 inline-flex items-center justify-center rounded-full border px-[8px] py-[2px]
+             text-[10px] md:text-[11px] leading-[12px] font-semibold text-[#047857] whitespace-nowrap"
+  style={{
+    background: "#E6FDF5",
+    borderColor: brand.pillBorder,
+    height: "16px",
+    boxSizing: "border-box",
+  }}
+  aria-hidden="true"
 >
   RGN-T1™ IMMUNOREGULATOR
 </span>
+
 
             </div>
           </div>
