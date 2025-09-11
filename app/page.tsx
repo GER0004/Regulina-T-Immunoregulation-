@@ -750,7 +750,6 @@ export default function Page() {
       {d.hero.pretitle}
     </span>
   </div>
-</div>
 
             <h1 className="mt-3 font-extrabold" style={{ color: brand.ink, fontSize: "36px", lineHeight: 1.1 }}>
               <span className="block md:text-[60px]" style={{ fontSize: "36px", lineHeight: 1.1 }}>
