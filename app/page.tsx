@@ -11,7 +11,7 @@ import {
   Shield,
   Check,
 } from "lucide-react";
-import { PieChart, Pie, ResponsiveContainer, Tooltip } from "recharts";
+import { PieChart, Pie, ResponsiveContainer, Tooltip, Cell } from "recharts";
 
 /* ===================== Brand / Theme ===================== */
 const brand = {
@@ -55,7 +55,7 @@ function FlaskIcon({ size = 28, className = "" }: { size?: number; className?: s
   );
 }
 
-/* ===================== Section Title (pill) ===================== */
+/* ===================== Section Title (pill) — уменьшен в 2 раза ===================== */
 function SectionTitle({
   as = "h2",
   className = "",
@@ -70,10 +70,8 @@ function SectionTitle({
     <Tag
       className={[
         "inline-block rounded-full border",
-        // мобайл: 14–16px x 8px; десктоп: 18–20px x 10px
-        "px-[14px] md:px-[18px] py-2 md:py-[10px]",
-        // типографика
-        "text-[22px] sm:text-[24px] md:text-[28px] lg:text-[32px] font-extrabold leading-tight text-[#0F172A]",
+        "px-[12px] md:px-[14px] py-[6px] md:py-[8px]",
+        "text-[12px] sm:text-[14px] md:text-[16px] lg:text-[18px] font-extrabold leading-tight text-[#0F172A]",
         "whitespace-normal",
         className,
       ].join(" ")}
@@ -100,11 +98,15 @@ const dict = {
       paragraph:
         "a solution uniting faith, science, and modern biotech — opening a new era in immunology and medicine.",
     },
+    infographic: {
+      title: "Infographic\u00A0—\u00A0addressable\u00A0segments",
+      shortTitle: "Infographic\u00A0—\u00A0segments",
+    },
     segments: {
       autoimmune: "Autoimmune",
-      aging: "Healthy aging",
+      healthyAging: "Healthy aging",
       infectious: "Infectious",
-      oncology: "Oncology-adjacent",
+      oncologyAdjacent: "Oncology-adjacent",
       transplantationTherapy: "Transplantation therapy",
     },
     blocks: {
@@ -166,11 +168,15 @@ const dict = {
       paragraph:
         "решение, соединяющее веру, науку и современные биотехнологии — открывая новую эпоху в иммунологии и медицине.",
     },
+    infographic: {
+      title: "Инфографика\u00A0—\u00A0адресуемые\u00A0сегменты",
+      shortTitle: "Инфографика\u00A0—\u00A0сегменты",
+    },
     segments: {
       autoimmune: "Аутоиммунные",
-      aging: "Здоровое старение",
+      healthyAging: "Здоровое старение",
       infectious: "Инфекционные",
-      oncology: "Смежные с онкологией",
+      oncologyAdjacent: "Смежные с онкологией",
       transplantationTherapy: "Трансплантационная терапия",
     },
     blocks: {
@@ -234,11 +240,15 @@ const dict = {
       paragraph:
         "حلٌ يجمع الإيمان والعِلم والتقنيات الحيوية الحديثة، لفتح عصرٍ جديد في المناعة والطب.",
     },
+    infographic: {
+      title: "إنفوجرافيك\u00A0—\u00A0الفئات\u00A0القابلة\u00A0للخدمة",
+      shortTitle: "إنفوجرافيك\u00A0—\u00A0الفئات",
+    },
     segments: {
       autoimmune: "المناعية الذاتية",
-      aging: "الشيخوخة الصحية",
+      healthyAging: "الشيخوخة الصحية",
       infectious: "الأمراض المعدية",
-      oncology: "المجاورة للأورام",
+      oncologyAdjacent: "المجاورة للأورام",
       transplantationTherapy: "العلاج بالزرع",
     },
     blocks: {
@@ -458,20 +468,20 @@ function Feature({ icon, title, desc }: { icon: React.ReactNode; title: string; 
 }
 
 /* ===================== Market Pie (Infographic) ===================== */
-type SegKey = "autoimmune" | "aging" | "infectious" | "oncology" | "transplant";
+type SegKey = "autoimmune" | "healthyAging" | "infectious" | "oncologyAdjacent" | "transplant";
 const segmentPalette: Record<SegKey, string> = {
   autoimmune: "#1E88E5", // blue
-  aging: "#0CA678",      // green
+  healthyAging: "#0CA678", // green
   infectious: "#F59E0B", // orange/yellow
-  oncology: "#C62828",   // red/burgundy
+  oncologyAdjacent: "#C62828", // red/burgundy
   transplant: "#7C3AED", // violet
 };
 // Временное равенство долей: по 20%
 const marketValues: Record<SegKey, number> = {
   autoimmune: 20,
-  aging: 20,
+  healthyAging: 20,
   infectious: 20,
-  oncology: 20,
+  oncologyAdjacent: 20,
   transplant: 20,
 };
 function lighten(hex: string, amt = 28) {
@@ -486,6 +496,18 @@ function lighten(hex: string, amt = 28) {
   return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b
     .toString(16)
     .padStart(2, "0")}`;
+}
+
+/* Custom tooltip: показывает только название сегмента, без чисел */
+function SegmentTooltip({ active, payload }: any) {
+  if (!active || !payload || !payload.length) return null;
+  const name = payload[0]?.name as string | undefined;
+  if (!name) return null;
+  return (
+    <div className="rounded-md border border-slate-200 bg-white px-3 py-1 text-xs text-slate-800 shadow">
+      {name}
+    </div>
+  );
 }
 
 /* ===================== Language Switcher (Dropdown) ===================== */
@@ -589,6 +611,7 @@ function LanguageSwitcher({
 /* ===================== Page ===================== */
 export default function Page() {
   const [lang, setLang] = useState<Lang>(DEFAULT_LANG);
+  const [ultraNarrow, setUltraNarrow] = useState<boolean>(false); // < 320px — короткий заголовок инфографики
 
   // init language from cookie/localStorage/navigator once
   useEffect(() => {
@@ -598,6 +621,14 @@ export default function Page() {
     const guess: Lang =
       fromCookie || fromLS || (nav.startsWith("ru") ? "RU" : nav.startsWith("ar") ? "AR" : "EN");
     setLang(guess);
+  }, []);
+
+  // отслеживаем ширину для fallback-заголовка инфографики
+  useEffect(() => {
+    const check = () => setUltraNarrow(window.innerWidth < 320);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
   const d = dict[lang];
@@ -773,14 +804,20 @@ export default function Page() {
 
             {/* Инфографика — 5 сегментов */}
             <Card className="p-6 md:p-8">
-              <SectionTitle as="h3" className="mb-4">Infographic — addressable segments</SectionTitle>
+              {/* Заголовок без плашки, обычный вес, без переносов */}
+              <h3
+                className="mb-4 mt-8 md:mt-12 text-[22px] sm:text-[24px] md:text-[28px] lg:text-[32px] font-normal text-[#0F172A]"
+                style={{ whiteSpace: "nowrap", wordBreak: "keep-all", hyphens: "none" }}
+              >
+                {ultraNarrow ? dict[lang].infographic.shortTitle : dict[lang].infographic.title}
+              </h3>
 
               <figure role="group" aria-label="Market segments donut chart" className={`${isRTL ? "text-right" : ""}`}>
                 <div className="h-64 w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <defs>
-                        {( ["autoimmune","aging","infectious","oncology","transplant"] as SegKey[] ).map((k) => (
+                        {( ["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[] ).map((k) => (
                           <linearGradient id={`grad-${k}`} key={k} x1="0" y1="0" x2="1" y2="1">
                             <stop offset="0%" stopColor={lighten(segmentPalette[k], 28)} />
                             <stop offset="100%" stopColor={segmentPalette[k]} />
@@ -789,18 +826,18 @@ export default function Page() {
                       </defs>
 
                       <Pie
-                        data={(["autoimmune","aging","infectious","oncology","transplant"] as SegKey[]).map((k) => ({
+                        data={(["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[]).map((k) => ({
                           key: k,
                           name:
                             k === "transplant"
                               ? dict[lang].segments.transplantationTherapy
                               : k === "autoimmune"
                               ? dict[lang].segments.autoimmune
-                              : k === "aging"
-                              ? dict[lang].segments.aging
+                              : k === "healthyAging"
+                              ? dict[lang].segments.healthyAging
                               : k === "infectious"
                               ? dict[lang].segments.infectious
-                              : dict[lang].segments.oncology,
+                              : dict[lang].segments.oncologyAdjacent,
                           value: marketValues[k],
                           fill: `url(#grad-${k})`,
                         }))}
@@ -811,36 +848,56 @@ export default function Page() {
                         stroke="rgba(15,23,42,0.12)"
                         strokeWidth={1}
                         isAnimationActive
-                      />
-                      <Tooltip />
+                      >
+                        {( ["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[] ).map((k) => {
+                          const label =
+                            k === "transplant"
+                              ? dict[lang].segments.transplantationTherapy
+                              : k === "autoimmune"
+                              ? dict[lang].segments.autoimmune
+                              : k === "healthyAging"
+                              ? dict[lang].segments.healthyAging
+                              : k === "infectious"
+                              ? dict[lang].segments.infectious
+                              : dict[lang].segments.oncologyAdjacent;
+                          return (
+                            <Cell key={`cell-${k}`} fill={`url(#grad-${k})`}>
+                              <title>{label}</title>
+                            </Cell>
+                          );
+                        })}
+                      </Pie>
+
+                      {/* Тултип без процентов — только название */}
+                      <Tooltip content={<SegmentTooltip />} />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
 
-                {/* Легенда: 1–2 колонки, кликабельные зоны ≥32px */}
+                {/* Легенда: без процентов; 1 колонка мобайл / 2 колонки десктоп */}
                 <div
-                  className={`mx-auto mt-3 grid max-w-[520px] grid-cols-1 gap-x-4 gap-y-1 text-xs sm:grid-cols-2 ${
+                  className={`mx-auto mt-3 grid max-w-[520px] grid-cols-1 gap-x-4 gap-y-2 text-xs sm:grid-cols-2 ${
                     isRTL ? "text-right" : ""
                   }`}
                   aria-label="Legend"
                 >
-                  {( ["autoimmune","aging","infectious","oncology","transplant"] as SegKey[] ).map((k) => {
+                  {( ["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[] ).map((k) => {
                     const label =
                       k === "transplant"
                         ? dict[lang].segments.transplantationTherapy
                         : k === "autoimmune"
                         ? dict[lang].segments.autoimmune
-                        : k === "aging"
-                        ? dict[lang].segments.aging
+                        : k === "healthyAging"
+                        ? dict[lang].segments.healthyAging
                         : k === "infectious"
                         ? dict[lang].segments.infectious
-                        : dict[lang].segments.oncology;
+                        : dict[lang].segments.oncologyAdjacent;
                     return (
                       <button
                         key={k}
                         type="button"
-                        className="group flex min-h-8 items-center gap-2 rounded-md px-2 py-1 hover:bg-white/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-                        aria-label={`${label} — ${marketValues[k]}%`}
+                        className="group flex min-h-8 items-center gap-3 rounded-md px-2 py-1 hover:bg-white/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                        aria-label={label}
                       >
                         <span
                           className="inline-flex h-2.5 w-2.5 shrink-0 rounded-full"
@@ -848,26 +905,25 @@ export default function Page() {
                           aria-hidden="true"
                         />
                         <span className="text-[#111827]">{label}</span>
-                        <span className="ml-auto text-slate-500">{marketValues[k]}%</span>
                       </button>
                     );
                   })}
                 </div>
 
                 <figcaption className="sr-only">
-                  {(["autoimmune","aging","infectious","oncology","transplant"] as SegKey[])
+                  {(["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[])
                     .map((k) => {
                       const label =
                         k === "transplant"
                           ? dict[lang].segments.transplantationTherapy
                           : k === "autoimmune"
                           ? dict[lang].segments.autoimmune
-                          : k === "aging"
-                          ? dict[lang].segments.aging
+                          : k === "healthyAging"
+                          ? dict[lang].segments.healthyAging
                           : k === "infectious"
                           ? dict[lang].segments.infectious
-                          : dict[lang].segments.oncology;
-                      return `${label}: ${marketValues[k]}%`;
+                          : dict[lang].segments.oncologyAdjacent;
+                      return label;
                     })
                     .join("; ")}
                 </figcaption>
