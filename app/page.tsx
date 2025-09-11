@@ -624,12 +624,12 @@ export default function Page() {
   }, []);
 
   // отслеживаем ширину для fallback-заголовка инфографики
-  useEffect(() => {
-    const check = () => setUltraNarrow(window.innerWidth < 320);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
+ useEffect(() => {
+  const check = () => setUltraNarrow(window.innerWidth <= 330);
+  check();
+  window.addEventListener("resize", check);
+  return () => window.removeEventListener("resize", check);
+}, []);
 
   const d = dict[lang];
   const isRTL = d.dir === "rtl";
@@ -803,136 +803,140 @@ export default function Page() {
             </Card>
 
             {/* Инфографика — 5 сегментов */}
-            <Card className="p-6 md:p-8">
-              {/* Заголовок без плашки, обычный вес, без переносов */}
-              <h3
-                className="mb-4 mt-8 md:mt-12 text-[22px] sm:text-[24px] md:text-[28px] lg:text-[32px] font-normal text-[#0F172A]"
-                style={{ whiteSpace: "nowrap", wordBreak: "keep-all", hyphens: "none" }}
-              >
-                {ultraNarrow ? dict[lang].infographic.shortTitle : dict[lang].infographic.title}
-              </h3>
+         <Card className="p-6 md:p-8 overflow-visible">
+  {/* Заголовок: одна строка, авто-подгон, не обрезается */}
+  <h3
+    className="mb-4 mt-7 pr-4 md:pr-5 font-normal text-[#0F172A]
+               whitespace-nowrap [word-break:keep-all] [hyphens:none]
+               text-[clamp(18px,5vw,22px)] md:text-[clamp(24px,2.6vw,32px)]"
+  >
+    {ultraNarrow ? dict[lang].infographic.shortTitle : dict[lang].infographic.title}
+  </h3>
 
-              <figure role="group" aria-label="Market segments donut chart" className={`${isRTL ? "text-right" : ""}`}>
-                <div className="h-64 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <defs>
-                        {( ["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[] ).map((k) => (
-                          <linearGradient id={`grad-${k}`} key={k} x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stopColor={lighten(segmentPalette[k], 28)} />
-                            <stop offset="100%" stopColor={segmentPalette[k]} />
-                          </linearGradient>
-                        ))}
-                      </defs>
+  {/* Скругляем и «режем» только графику, не заголовок */}
+  <div className="overflow-hidden rounded-xl">
+    <figure role="group" aria-label="Market segments donut chart" className={`${isRTL ? "text-right" : ""}`}>
+      <div className="h-64 w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <defs>
+              {( ["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[] ).map((k) => (
+                <linearGradient id={`grad-${k}`} key={k} x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor={lighten(segmentPalette[k], 28)} />
+                  <stop offset="100%" stopColor={segmentPalette[k]} />
+                </linearGradient>
+              ))}
+            </defs>
 
-                      <Pie
-                        data={(["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[]).map((k) => ({
-                          key: k,
-                          name:
-                            k === "transplant"
-                              ? dict[lang].segments.transplantationTherapy
-                              : k === "autoimmune"
-                              ? dict[lang].segments.autoimmune
-                              : k === "healthyAging"
-                              ? dict[lang].segments.healthyAging
-                              : k === "infectious"
-                              ? dict[lang].segments.infectious
-                              : dict[lang].segments.oncologyAdjacent,
-                          value: marketValues[k],
-                          fill: `url(#grad-${k})`,
-                        }))}
-                        dataKey="value"
-                        nameKey="name"
-                        outerRadius={90}
-                        innerRadius={40}
-                        stroke="rgba(15,23,42,0.12)"
-                        strokeWidth={1}
-                        isAnimationActive
-                      >
-                        {( ["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[] ).map((k) => {
-                          const label =
-                            k === "transplant"
-                              ? dict[lang].segments.transplantationTherapy
-                              : k === "autoimmune"
-                              ? dict[lang].segments.autoimmune
-                              : k === "healthyAging"
-                              ? dict[lang].segments.healthyAging
-                              : k === "infectious"
-                              ? dict[lang].segments.infectious
-                              : dict[lang].segments.oncologyAdjacent;
-                          return (
-                            <Cell key={`cell-${k}`} fill={`url(#grad-${k})`}>
-                              <title>{label}</title>
-                            </Cell>
-                          );
-                        })}
-                      </Pie>
+            <Pie
+              data={(["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[]).map((k) => ({
+                key: k,
+                name:
+                  k === "transplant"
+                    ? dict[lang].segments.transplantationTherapy
+                    : k === "autoimmune"
+                    ? dict[lang].segments.autoimmune
+                    : k === "healthyAging"
+                    ? dict[lang].segments.healthyAging
+                    : k === "infectious"
+                    ? dict[lang].segments.infectious
+                    : dict[lang].segments.oncologyAdjacent,
+                value: marketValues[k],
+                fill: `url(#grad-${k})`,
+              }))}
+              dataKey="value"
+              nameKey="name"
+              outerRadius={90}
+              innerRadius={40}
+              stroke="rgba(15,23,42,0.12)"
+              strokeWidth={1}
+              isAnimationActive
+            >
+              {( ["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[] ).map((k) => {
+                const label =
+                  k === "transplant"
+                    ? dict[lang].segments.transplantationTherapy
+                    : k === "autoimmune"
+                    ? dict[lang].segments.autoimmune
+                    : k === "healthyAging"
+                    ? dict[lang].segments.healthyAging
+                    : k === "infectious"
+                    ? dict[lang].segments.infectious
+                    : dict[lang].segments.oncologyAdjacent;
+                return (
+                  <Cell key={`cell-${k}`} fill={`url(#grad-${k})`}>
+                    <title>{label}</title>
+                  </Cell>
+                );
+              })}
+            </Pie>
 
-                      {/* Тултип без процентов — только название */}
-                      <Tooltip content={<SegmentTooltip />} />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
+            {/* Тултип без процентов — только название */}
+            <Tooltip content={<SegmentTooltip />} />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
 
-                {/* Легенда: без процентов; 1 колонка мобайл / 2 колонки десктоп */}
-                <div
-                  className={`mx-auto mt-3 grid max-w-[520px] grid-cols-1 gap-x-4 gap-y-2 text-xs sm:grid-cols-2 ${
-                    isRTL ? "text-right" : ""
-                  }`}
-                  aria-label="Legend"
-                >
-                  {( ["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[] ).map((k) => {
-                    const label =
-                      k === "transplant"
-                        ? dict[lang].segments.transplantationTherapy
-                        : k === "autoimmune"
-                        ? dict[lang].segments.autoimmune
-                        : k === "healthyAging"
-                        ? dict[lang].segments.healthyAging
-                        : k === "infectious"
-                        ? dict[lang].segments.infectious
-                        : dict[lang].segments.oncologyAdjacent;
-                    return (
-                      <button
-                        key={k}
-                        type="button"
-                        className="group flex min-h-8 items-center gap-3 rounded-md px-2 py-1 hover:bg-white/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-                        aria-label={label}
-                      >
-                        <span
-                          className="inline-flex h-2.5 w-2.5 shrink-0 rounded-full"
-                          style={{ background: segmentPalette[k] }}
-                          aria-hidden="true"
-                        />
-                        <span className="text-[#111827]">{label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
+      {/* Легенда — без процентов */}
+      <div
+        className={`mx-auto mt-3 grid max-w-[520px] grid-cols-1 gap-x-4 gap-y-2 text-xs sm:grid-cols-2 ${
+          isRTL ? "text-right" : ""
+        }`}
+        aria-label="Legend"
+      >
+        {( ["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[] ).map((k) => {
+          const label =
+            k === "transplant"
+              ? dict[lang].segments.transplantationTherapy
+              : k === "autoimmune"
+              ? dict[lang].segments.autoimmune
+              : k === "healthyAging"
+              ? dict[lang].segments.healthyAging
+              : k === "infectious"
+              ? dict[lang].segments.infectious
+              : dict[lang].segments.oncologyAdjacent;
+          return (
+            <button
+              key={k}
+              type="button"
+              className="group flex min-h-8 items-center gap-3 rounded-md px-2 py-1 hover:bg-white/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+              aria-label={label}
+            >
+              <span
+                className="inline-flex h-2.5 w-2.5 shrink-0 rounded-full"
+                style={{ background: segmentPalette[k] }}
+                aria-hidden="true"
+              />
+              <span className="text-[#111827]">{label}</span>
+            </button>
+          );
+        })}
+      </div>
 
-                <figcaption className="sr-only">
-                  {(["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[])
-                    .map((k) => {
-                      const label =
-                        k === "transplant"
-                          ? dict[lang].segments.transplantationTherapy
-                          : k === "autoimmune"
-                          ? dict[lang].segments.autoimmune
-                          : k === "healthyAging"
-                          ? dict[lang].segments.healthyAging
-                          : k === "infectious"
-                          ? dict[lang].segments.infectious
-                          : dict[lang].segments.oncologyAdjacent;
-                      return label;
-                    })
-                    .join("; ")}
-                </figcaption>
-              </figure>
+      <figcaption className="sr-only">
+        {(["autoimmune","healthyAging","infectious","oncologyAdjacent","transplant"] as SegKey[])
+          .map((k) => {
+            const label =
+              k === "transplant"
+                ? dict[lang].segments.transplantationTherapy
+                : k === "autoimmune"
+                ? dict[lang].segments.autoimmune
+                : k === "healthyAging"
+                ? dict[lang].segments.healthyAging
+                : k === "infectious"
+                ? dict[lang].segments.infectious
+                : dict[lang].segments.oncologyAdjacent;
+            return label;
+          })
+          .join("; ")}
+      </figcaption>
+    </figure>
+  </div>
 
-              <p className="mt-3 text-xs text-slate-500">
-                Illustrative split. Final segmentation to be refined with market research.
-              </p>
-            </Card>
+  <p className="mt-3 text-xs text-slate-500">
+    Illustrative split. Final segmentation to be refined with market research.
+  </p>
+</Card>
           </div>
         </div>
       </section>
