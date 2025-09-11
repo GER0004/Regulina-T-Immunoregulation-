@@ -1,2 +1,2 @@
-# Regulina-T-Immunoregulation-
+# Regulina-T-
 Thymus Immunoregulator Platform
