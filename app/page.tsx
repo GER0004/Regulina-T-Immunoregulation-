@@ -579,6 +579,10 @@ export default function Page(){
             <li key={`m-b-${i}`} className="flex items-start gap-2 text-slate-700">
               <CheckCircle2 className="mt-0.5 shrink-0 text-emerald-600" size={18} />
               <TypewriterOnView text={b} />
+const missionData = (dict as any)[lang]?.mission ?? {};
+const bullets: string[] = Array.isArray(missionData.bullets) ? missionData.bullets : [];
+const kpis: string[] = Array.isArray(missionData.kpis) ? missionData.kpis : [];
+
             </li>
           ))}
         </ul>
