@@ -557,8 +557,22 @@ export default function Page(){
 
           <RevealOnView delay={80}>
             <div className="grid grid-cols-2 gap-4 md:gap-6">
-              <Card className="p-6 md:p-8"><div className="text-emerald-700">{(dict as any)[lang].lbl? (dict as any)[lang].lbl.mission && (dict as any)[lang].lbl ? (dict as any)[lang].lbl : dict[lang] : dict[lang]} {/* placeholder to keep structure */}</div></Card>
-              <Card className="p-6 md:p-8"><div className="text-emerald-700">{/* можно заменить на KPI */}>$500B+</div></Card>
+              <div className="grid grid-cols-2 gap-4 md:gap-6">
+  <Card className="p-6 md:p-8">
+    <div className="text-emerald-700">
+      {/* placeholder — можно заменить на реальный KPI */}
+      KPI
+    </div>
+  </Card>
+
+  <Card className="p-6 md:p-8">
+    <div className="text-emerald-700">
+      {/* можно заменить на KPI */}
+      $500B+
+    </div>
+  </Card>
+</div>
+
             </div>
           </RevealOnView>
         </div>
