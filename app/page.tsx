@@ -508,7 +508,6 @@ export default function Page(){
 </span>
 
               <span
-                ref={pillRef}
                 className="mt-1 inline-flex items-center justify-center rounded-full border px-[8px] py-[2px]
                            text-[10px] md:text-[11px] leading-[12px] font-semibold text-[#047857] whitespace-nowrap"
                 style={{
