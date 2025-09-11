@@ -12,8 +12,7 @@ import {
   Users2,
   Shield,
 } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
-
+import { motion } from "framer-motion";
 
 /* =========================================================
    Brand palette
@@ -507,7 +506,6 @@ export default function Page() {
   const [lang, setLang] = useState<Lang>(DEFAULT_LANG);
   const d = dict[lang];
   const isRTL = d.dir === "rtl";
-  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     document.documentElement.dir = d.dir;
@@ -549,18 +547,14 @@ export default function Page() {
         </span>
 
         {/* Бейдж: 12–13px, высота ~16–18px, padding 2px 8px, ВСЕГДА в одну строку, без многоточий */}
-        <motion.span
-  className="mt-1 inline-flex items-center rounded-full border px-[6px] py-[1px]
-             text-[10px] md:text-[11px] leading-[11px]
-             font-semibold text-[#047857] whitespace-nowrap"
-  style={{ background: "#F0FDF4", borderColor: "#BBF7D0", height: "12px" }}
-  initial={reduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
-  animate={{ opacity: 1, scale: 1 }}
-  transition={reduceMotion ? { duration: 0 } : { duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
->
-  RGN-T1™ IMMUNOREGULATOR
-</motion.span>
-
+        <span
+          className="mt-1 inline-flex items-center rounded-full border px-2 py-0.5 text-[12px] md:text-[13px] font-semibold text-[#047857] whitespace-nowrap"
+          style={{ background: "#E6FDF5", borderColor: "#BBF7D0", height: "18px" }}
+        >
+          RGN-T1™ IMMUNOREGULATOR
+        </span>
+      </div>
+    </div>
 
     {/* ПРАВО: языковой свитчер (EN/RU/AR), справа на одном уровне, со стабильным отступом */}
     <div className="flex items-center gap-2 shrink-0">
