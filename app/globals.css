@@ -105,3 +105,24 @@ font-size: clamp(12px, 1.6vw, 16px);
 .section-name {
   @apply glass-chip square-chip text-emerald-800/90 dark:text-emerald-200/90;
 }
+:root{
+  /* текущие (холодные) можно оставить как есть */
+  --bg-page:#F6FAF9;
+  --bg-card:#FFFFFF;
+  --text:#0F172A;
+  --muted:#475569;
+  --primary:#059669;
+  --primary-2:#047857;
+  --border:#E2E8F0;
+}
+
+/* ТЁПЛЫЙ РЕЖИМ (Night-Shift-style) */
+html.warm{
+  --bg-page:#FAF4ED;   /* тёплый «бумажный» белый */
+  --bg-card:#FFFCF7;   /* тёплые карточки */
+  --text:#0F172A;      /* текст оставляем контрастным */
+  --muted:#495261;     /* слегка теплее */
+  --primary:#059669;   /* брендовый зелёный без изменений */
+  --primary-2:#047857;
+  --border:#EADFD3;    /* тёплая граница вместо серо-голубой */
+}
