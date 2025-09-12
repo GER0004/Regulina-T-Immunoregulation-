@@ -114,11 +114,11 @@ font-size: clamp(12px, 1.6vw, 16px);
   --primary-2:#047857; /* hover для кнопок */
   --border:#EADFD3;    /* тёплая граница */
 }
-
-/* (необязательно, но приятно) выделение текста */
-::selection{ background:#FFE7C2; color:#0F172A; }
 /* Глобально подменяем белый на тёплую карточку */
 .bg-white { background-color: var(--bg-card) !important; }
 
 /* Если где-то нужен именно чисто белый — использовать .bg-pure */
 .bg-pure { background-color: #ffffff !important; }
+/* (необязательно, но приятно) выделение текста */
+::selection{ background:#FFE7C2; color:#0F172A; }
+
