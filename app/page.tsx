@@ -552,12 +552,6 @@ useEffect(() => {
 <h2 className="mt-2 text-xl md:text-2xl font-semibold text-slate-800">
   {d.hero.title2}
 </h2>
-
-{/* Paragraph */}
-<p className="mt-4 max-w-2xl text-[15px] md:text-[17px] leading-relaxed text-slate-600">
-  {d.hero.paragraph}
-</p>
-
             {/* Paragraph typing */}
             <p className="mt-4 max-w-[88%] md:max-w-[680px] lg:max-w-[720px]"
                style={{ fontSize:"18px", lineHeight:1.6, color:"rgba(11,18,32,.72)", minHeight:"3.2em" }}>
