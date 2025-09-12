@@ -1,20 +1,10 @@
 import "./globals.css";
+import { ReactNode } from "react";
 
 export const metadata = {
   title: "Regulina-T™ — Thymus Immunoregulator Platform",
-  description: "A unique breakthrough uniting science and faith."
-};
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
-  );
-}
-export const metadata = {
-  title: "Regulina-T™ — Thymus Immunoregulator Platform",
-  description: "A unique breakthrough uniting science and faith in immunoregulation.",
+  description:
+    "A unique breakthrough uniting science and faith in immunoregulation.",
   icons: {
     icon: "/favicon.ico",
   },
@@ -22,7 +12,8 @@ export const metadata = {
     type: "website",
     url: "https://regulina-t-jg5l.vercel.app",
     title: "Regulina-T™ — Thymus Immunoregulator Platform",
-    description: "A unique breakthrough uniting science and faith in immunoregulation.",
+    description:
+      "A unique breakthrough uniting science and faith in immunoregulation.",
     images: [
       {
         url: "https://regulina-t-jg5l.vercel.app/og-regulina.png",
@@ -35,7 +26,16 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Regulina-T™ — Thymus Immunoregulator Platform",
-    description: "A unique breakthrough uniting science and faith in immunoregulation.",
+    description:
+      "A unique breakthrough uniting science and faith in immunoregulation.",
     images: ["https://regulina-t-jg5l.vercel.app/og-regulina.png"],
   },
 };
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+}
