@@ -557,6 +557,7 @@ useEffect(() => {
                style={{ fontSize:"18px", lineHeight:1.6, color:"rgba(11,18,32,.72)", minHeight:"3.2em" }}>
               <Typewriter text={`Regulina-T™ — ${d.hero.paragraph}`} cps={24} startDelay={1000}/>
             </p>
+<div className="mt-2 h-px w-24 bg-gradient-to-r from-emerald-500/60 to-transparent rounded-full"></div>
 
             {/* CTA */}
             <div className={`mt-5 flex ${isRTL ? "flex-row-reverse" : ""} gap-4 sm:flex-row sm:items-center max-sm:flex-col max-sm:items-stretch`}>
