@@ -583,19 +583,23 @@ useEffect(() => {
 
           {/* right: YouTube */}
           <div>
-            <Card className="relative aspect-video w-full overflow-hidden p-0">
-<video
-  className="w-full rounded-2xl"
-  controls
-  playsInline
-  preload="metadata"
-  poster="/og-regulina.png"
->
-  <source src="/video/regulina.mp4" type="video/mp4" />
-  Ваш браузер не поддерживает видео.
-</video>
-              <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-emerald-500/30"/>
-            </Card>
+           <Card className="relative w-full overflow-hidden p-0">
+  <div className="relative w-full aspect-video rounded-2xl overflow-hidden">
+    <video
+      className="absolute inset-0 w-full h-full object-cover"
+      controls
+      playsInline
+      preload="metadata"
+      poster="/video/poster.jpg"
+    >
+      <source src="/video/regulina.mp4" type="video/mp4" />
+      Ваш браузер не поддерживает видео.
+    </video>
+  </div>
+
+  {/* тонкое зелёное свечение как у тебя было */}
+  <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-emerald-500/30"></div>
+</Card>
           </div>
         </div>
       </section>
