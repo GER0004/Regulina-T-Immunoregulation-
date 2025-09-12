@@ -131,12 +131,12 @@ const dict = {
   EN: {
     dir: "ltr" as const,
     menu: ["Home","Science","Platform","Partnership","Contacts"],
-    hero: {
-      pretitle: "A UNIQUE BREAKTHROUGH UNITING SCIENCE AND FAITH",
-      title1: "Regulina-T™",
-      title2: "Thymus regeneration & immunoregulator",
-      paragraph: "a solution uniting faith, science, and modern biotech — opening a new era in immunology and medicine.",
-    },
+   hero: {
+  pretitle: "A unique breakthrough uniting science and faith", // обычный регистр
+  title1: "Regulina-T™", // неразрывный дефис: U+2011
+  title2: "Thymus regeneration & immunoregulator",
+  paragraph: "a solution uniting faith, science, and modern biotech — opening a new era in immunology and medicine.",
+},
     infographic: {
       title: "Infographic\u00A0—\u00A0addressable\u00A0segments",
       shortTitle: "Infographic\u00A0—\u00A0segments",
@@ -168,11 +168,11 @@ const dict = {
     dir: "ltr" as const,
     menu: ["Главная","Наука","Платформа","Партнёрство","Контакты"],
     hero: {
-      pretitle: "УНИКАЛЬНЫЙ ПРОРЫВ, ОБЪЕДИНЯЮЩИЙ НАУКУ И ВЕРУ",
-      title1: "Regulina-T™",
-      title2: "Регенерация тимуса & иммунорегулятор",
-      paragraph: "решение, соединяющее веру, науку и современные биотехнологии — открывая новую эпоху в иммунологии и медицине.",
-    },
+    pretitle: "Уникальный прорыв, объединяющий науку и веру",
+    title1: "Regulina-T™", // неразрывный дефис U+2011
+    title2: "Регенерация тимуса и иммунорегулятор",
+    paragraph: "решение, соединяющее веру, науку и современные биотехнологии — открывающее новую эпоху в иммунологии и медицине.",
+  },
     infographic: {
       title: "Инфографика — адресуемые сегменты",
       shortTitle: "Инфографика — сегменты",
@@ -203,12 +203,12 @@ const dict = {
   AR: {
     dir: "rtl" as const,
     menu: ["الرئيسية","العِلم","المنصّة","الشراكة","التواصل"],
-    hero: {
-      pretitle: "اختراق فريد يجمع العِلم والإيمان",
-      title1: "Regulina-T™",
-      title2: "تجديد الغدة الزعترية ومنظِّم مناعي",
-      paragraph: "حلٌ يجمع الإيمان والعِلم والتقنيات الحيوية الحديثة، لفتح عصرٍ جديد في المناعة والطب.",
-    },
+   hero: {
+    pretitle: "اختراق فريد يوحّد العلم والإيمان",
+    title1: "Regulina-T™", // استخدم الواصلة غير القابلة للكسر U+2011
+    title2: "تجديد الغدة الزعترية ومنظم مناعي",
+    paragraph: "حل يجمع بين الإيمان والعلم والتقنيات الحيوية الحديثة — يفتح عصرًا جديدًا في علم المناعة والطب.",
+  },
     infographic: {
       title: "إنفوجرافيك — الفئات القابلة للخدمة",
       shortTitle: "إنفوجرافيك — الفئات",
@@ -538,27 +538,25 @@ useEffect(() => {
         <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 items-center gap-10 px-4 py-12 md:grid-cols-2 md:py-20">
           {/* left */}
           <div>
-            {/* Slogan */}
-            <div className="rt-fadeUp max-w-[88%] md:max-w-[680px] lg:max-w-[720px]">
-              <div
-                key={lang}
-                className="uppercase"
-                style={{
-                  letterSpacing:"0.04em", fontWeight:600, lineHeight:1.2,
-                  color:"rgba(14,165,233,.85)", minHeight:"2.5em", fontSize:"clamp(16px,4.2vw,20px)"
-                }}>
-                <span className="block md:text-[clamp(20px,2.6vw,22px)] lg:text-[clamp(22px,2vw,24px)]">
-                  {d.hero.pretitle}
-                </span>
-              </div>
-            </div>
+           {/* Slogan / Overline */}
+<p className="text-xs md:text-sm font-semibold tracking-[0.14em] uppercase text-emerald-700">
+  {d.hero.pretitle}
+</p>
 
-            <h1 className="mt-3 font-extrabold" style={{ color:brand.ink, fontSize:"36px", lineHeight:1.1 }}>
-              <span className="block md:text-[60px]" style={{ fontSize:"36px", lineHeight:1.1 }}>{d.hero.title1}</span>
-            </h1>
-            <div className="mt-1 font-bold" style={{ color:brand.ink, opacity:0.9, fontSize:"24px", lineHeight:1.2 }}>
-              <span className="block md:text-[42px]">{d.hero.title2}</span>
-            </div>
+{/* H1 */}
+<h1 className="mt-4 text-4xl md:text-6xl font-extrabold text-slate-900 whitespace-nowrap hyphens-none">
+  {d.hero.title1}
+</h1>
+
+{/* H2 */}
+<h2 className="mt-2 text-xl md:text-2xl font-semibold text-slate-800">
+  {d.hero.title2}
+</h2>
+
+{/* Paragraph */}
+<p className="mt-4 max-w-2xl text-[15px] md:text-[17px] leading-relaxed text-slate-600">
+  {d.hero.paragraph}
+</p>
 
             {/* Paragraph typing */}
             <p className="mt-4 max-w-[88%] md:max-w-[680px] lg:max-w-[720px]"
