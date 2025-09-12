@@ -584,12 +584,16 @@ useEffect(() => {
           {/* right: YouTube */}
           <div>
             <Card className="relative aspect-video w-full overflow-hidden p-0">
-<iframe className="h-full w-full"
-  src="https://www.youtube.com/embed/i7aRXbf9lI0?modestbranding=1&rel=0&playsinline=1&iv_load_policy=3"
-  title="Regulina-T — new video"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-  allowFullScreen loading="lazy" referrerPolicy="strict-origin-when-cross-origin">
-</iframe>
+<video
+  className="w-full rounded-2xl"
+  controls
+  playsInline
+  preload="metadata"
+  poster="/og-regulina.png"
+>
+  <source src="/video/regulina.mp4" type="video/mp4" />
+  Ваш браузер не поддерживает видео.
+</video>
               <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-emerald-500/30"/>
             </Card>
           </div>
